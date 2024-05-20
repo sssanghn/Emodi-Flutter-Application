@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1023426089934",
+    "project_id": "emodi-e0d3b",
+    "storage_bucket": "emodi-e0d3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023426089934:android:c0af335ded9b98d2f3119f",
+        "android_client_info": {
+          "package_name": "com.example.emodi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDZtAsHXeCs7bvgafAHXupo0BrjPr0ED8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
