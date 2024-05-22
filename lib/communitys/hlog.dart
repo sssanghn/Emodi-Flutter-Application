@@ -12,6 +12,8 @@ class HlogPage extends StatefulWidget {
   final List<String> images;
   final int countLikes;
   final String writeTime;
+  final String diaryTitle;
+  final String diaryDay;
   const HlogPage({
     super.key,
     required this.userUrl,
@@ -19,6 +21,8 @@ class HlogPage extends StatefulWidget {
     required this.images,
     required this.countLikes,
     required this.writeTime,
+    required this.diaryTitle,
+    required this.diaryDay
   });
 
   @override
@@ -230,10 +234,25 @@ class _HlogPageState extends State<HlogPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              '좋아요 ${widget.countLikes}개',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            child:
+            Row(
+              children: [
+              Text(
+                '좋아요 ${widget.countLikes}개',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              Text('${widget.diaryDay}',
+              style: TextStyle(
+                fontSize: 13,
+              ),
+              ),
+      ]
             ),
+          ),
+          Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text('${widget.diaryTitle}'),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -36,6 +36,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -96,6 +97,8 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         ],
         countLikes: 12,
         writeTime: '10:33 AM. 28 Feb',
+        diaryTitle: '홍바겐 지름기',
+        diaryDay: '2024-05-22',
       ),
     );
   }
