@@ -25,21 +25,42 @@ class _RootPageState extends State<RootPage> {
     ];
   }
 
-  // 페이지 아이콘 리스트
-  List<IconData> iconList = [
-    Icons.home,
-    Icons.forum,
-    Icons.groups,
-    Icons.person,
-  ];
-
-  // 네비게이션 바 제목 리스트
-  List<String> titleList = [
-    '메인',
-    '커뮤니티',
-    '연합',
-    '마이페이지',
-  ];
+  List<BottomNavigationBarItem> _bottomNavigationBarItems() {
+    return [
+      BottomNavigationBarItem(
+        icon: _bottomNavIndex == 0
+            ? ColorFiltered(
+          colorFilter: ColorFilter.mode(Constants.primaryColor, BlendMode.srcIn),
+          child: Image.asset('assets/edit_square.png', width: 30, height: 30),
+        )
+            : Image.asset('assets/edit_square.png', width: 30, height: 30),
+        label: '게시물',
+      ),
+      BottomNavigationBarItem(
+        icon: _bottomNavIndex == 1
+            ? ColorFiltered(
+          colorFilter: ColorFilter.mode(Constants.primaryColor, BlendMode.srcIn),
+          child: Image.asset('assets/patient_list.png', width: 30, height: 30),
+        )
+            : Image.asset('assets/patient_list.png', width: 30, height: 30),
+        label: '친구 목록',
+      ),
+      BottomNavigationBarItem(
+        icon: _bottomNavIndex == 2
+            ? ColorFiltered(
+          colorFilter: ColorFilter.mode(Constants.primaryColor, BlendMode.srcIn),
+          child: Image.asset('assets/diary.png', width: 30, height: 30),
+        )
+            : Image.asset('assets/diary.png', width: 30, height: 30),
+        label: '내 일기',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person_outline_outlined,
+        size: 30),
+        label: '마이페이지',
+      ),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -60,17 +81,11 @@ class _RootPageState extends State<RootPage> {
           currentIndex: _bottomNavIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
-          unselectedIconTheme: const IconThemeData(color: Colors.black),
-          selectedIconTheme: IconThemeData(color: Constants.primaryColor),
-          items: List.generate(
-            iconList.length,
-            (index) => BottomNavigationBarItem(
-              icon: Icon(iconList[index]),
-              label: titleList[index],
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Constants.primaryColor,
+          items: _bottomNavigationBarItems(),
             ),
           ),
-        ),
-      ),
     );
   }
 }

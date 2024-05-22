@@ -89,12 +89,6 @@ class _HlogPageState extends State<HlogPage> {
                         fontSize: 15,
                         fontWeight: FontWeight.w500),
                   ),
-                  Text(
-                    '풋살',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
                 ],
               ),
             )

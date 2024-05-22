@@ -3,6 +3,7 @@ import 'package:emodi/communitys/hlog.dart';
 import 'package:emodi/communitys/hlog_write.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:emodi/constants.dart';
 
 class CommunityHomePage extends StatefulWidget {
   const CommunityHomePage({super.key});
@@ -35,33 +36,44 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'emodi',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(width: 50),
+            Text(
+            'Emo',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Constants.primaryColor,
+              fontSize: 25,
+            ),
           ),
+            Text(
+              'Di',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
+              ),
+            ),
+        ],
         ),
         scrolledUnderElevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // 알림 버튼을 눌렀을 때 액션
+            },
+            icon: Icon(
+              Icons.notifications_none,
+              color: Colors.black,
+              size: 30.0,
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 5),
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/logo.png',
-                  width: 120,
-                ),
-                Spacer(),
-                IconButton(
-                  onPressed: _pickImage,
-                  icon: Icon(Icons.edit),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: _body(),
           ),
