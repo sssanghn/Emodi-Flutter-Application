@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emodi/constants.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:emodi/Auth/explanation.dart';
 import 'package:emodi/Auth/login.dart';
 import 'package:emodi/Auth/create.dart';
 import 'package:flutter/cupertino.dart';

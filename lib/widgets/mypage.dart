@@ -7,8 +7,8 @@ import 'package:emodi/constants.dart';
 int postsNum = 0;
 int likesNum = 0;
 int commentsNum = 0;
-String userName = 'John Doe';
-String userEmail = 'johndoe@example.com';
+String userName = 'ETRI';
+String userEmail = 'ETRI@hanyang.ac.kr';
 NetworkImage userImage = NetworkImage('https://via.placeholder.com/150');
 
 class MyPage extends StatefulWidget {
@@ -50,7 +50,6 @@ class _MyPageState extends State<MyPage> {
                 backgroundImage: userImage,
               ),
               SizedBox(height: 7),
-
               Text(
                 userName,
                 style: TextStyle(
@@ -101,11 +100,33 @@ class _MyPageState extends State<MyPage> {
                         ),
                         const VerticalDivider(),
                         Container(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Text(
+                                "팔로잉",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                likesNum.toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Constants.primaryColor,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const VerticalDivider(),
+                        Container(
                             padding: EdgeInsets.all(16),
                             child: Column(
                               children: [
                                 Text(
-                                  "좋아요",
+                                  "팔로워",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -119,28 +140,8 @@ class _MyPageState extends State<MyPage> {
                                   ),
                                 )
                               ],
-                            )),
-                        const VerticalDivider(),
-                        Container(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "댓글",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 3),
-                                Text(
-                                  commentsNum.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Constants.primaryColor,
-                                  ),
-                                )
-                              ],
-                            )),
+                            ),
+                        ),
                       ],
                     ),
                   ),
@@ -160,22 +161,6 @@ class _MyPageState extends State<MyPage> {
                         trailing: const Icon(Icons.navigate_next),
                         onTap: () {
                           // Handle Edit Profile tap
-                        },
-                      ),
-                      ListTile(
-                        leading: Icon(CupertinoIcons.star),
-                        title: Text('즐겨찾기 커뮤니티'),
-                        trailing: const Icon(Icons.navigate_next),
-                        onTap: () {
-                          // Handle Favorite Community tap
-                        },
-                      ),
-                      ListTile(
-                        leading: Icon(CupertinoIcons.question_circle),
-                        trailing: const Icon(Icons.navigate_next),
-                        title: Text('고객센터'),
-                        onTap: () {
-                          // Handle Customer Support tap
                         },
                       ),
                       ListTile(

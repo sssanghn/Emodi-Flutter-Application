@@ -14,6 +14,7 @@ class HlogPage extends StatefulWidget {
   final String writeTime;
   final String diaryTitle;
   final String diaryDay;
+  final List<String> likedProfile;
   const HlogPage({
     super.key,
     required this.userUrl,
@@ -22,7 +23,8 @@ class HlogPage extends StatefulWidget {
     required this.countLikes,
     required this.writeTime,
     required this.diaryTitle,
-    required this.diaryDay
+    required this.diaryDay,
+    required this.likedProfile,
   });
 
   @override
@@ -233,31 +235,83 @@ class _HlogPageState extends State<HlogPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-            Row(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: Row(
+              children: [
+                SizedBox(
+            width: 80,
+                  child: Stack(
+                    children: [
+                      ClipOval(
+                        child: Image.network(
+                          widget.likedProfile[0],
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        left: 20, // 두 번째 이미지의 위치 조정
+                        child: ClipOval(
+                          child: Image.network(
+                            widget.likedProfile[2],
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 40, // 세 번째 이미지의 위치 조정
+                        child: ClipOval(
+                          child: Image.network(
+                            widget.likedProfile[1],
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                'Liked by 00',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+                Spacer(),
+                Text(
+                  '좋아요 ${widget.countLikes}개',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Constants.textColor,
+                  ),
+                ),
+            ],
+          ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
               children: [
               Text(
-                '좋아요 ${widget.countLikes}개',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                '${widget.diaryTitle}',
               ),
               Spacer(),
               Text('${widget.diaryDay}',
               style: TextStyle(
                 fontSize: 13,
               ),
-              ),
-      ]
             ),
+            ]
           ),
-          Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text('${widget.diaryTitle}'),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ExpandableText(
-              '컨텐츠 입니다.\n컨텐츠 입니다.\n컨텐츠 입니다.\n컨텐츠 입니다.\n컨텐츠 입니다.',
+              '#키워드1 #키워드2 #키워드3 #키워드4',
               expandText: '더보기',
               linkColor: Colors.grey,
             ),

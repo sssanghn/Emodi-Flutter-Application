@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emodi/root_page.dart';
+import 'package:emodi/constants.dart';
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key});
@@ -24,19 +25,42 @@ class _FriendPageState extends State<FriendPage> {
   ];
 
   List<String> filteredFriends = [];
+  List<String> addedFriends = [];
+
+  Map<String, bool> followState = {};
 
   @override
   void initState() {
     super.initState();
     filteredFriends = friends;
+    for (var friend in friends) {
+      followState[friend] = true;
+    }
   }
 
   void filterFriends(String query) {
     setState(() {
-      filteredFriends = friends.where((friend) => friend.toLowerCase().contains(query.toLowerCase())).toList();
+      if (isToggleSelected) {
+        filteredFriends = friends.where((friend) => friend.toLowerCase().contains(query.toLowerCase())).toList();
+      } else {
+        filteredFriends = addedFriends.where((friend) => friend.toLowerCase().contains(query.toLowerCase())).toList();
+      }
     });
   }
 
+  void toggleFriend(String friendName) {
+    setState(() {
+      followState[friendName] = !(followState[friendName] ?? false);
+      if (!followState[friendName]!) {
+        addedFriends.add(friendName);
+      } else {
+        addedFriends.remove(friendName);
+      }
+      filterFriends('');  // Update the filteredFriends list based on the current toggle state
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -68,6 +92,7 @@ class _FriendPageState extends State<FriendPage> {
                     onTap: () {
                       setState(() {
                         isToggleSelected = true;
+                        filterFriends('');  // Update the filteredFriends list based on the toggle state
                       });
                     },
                     child: Column(
@@ -93,6 +118,7 @@ class _FriendPageState extends State<FriendPage> {
                     onTap: () {
                       setState(() {
                         isToggleSelected = false;
+                        filterFriends('');  // Update the filteredFriends list based on the toggle state
                       });
                     },
                     child: Column(
@@ -118,10 +144,11 @@ class _FriendPageState extends State<FriendPage> {
             buildSearchScreen(),
             Expanded(
               child: ListView.builder(
-                itemCount: friends.length,
+                itemCount: filteredFriends.length,
                 itemBuilder: (context, index) {
-                  return buildFriendListItem(
-                      context, friends[index], images[index]);
+                  String friendName = filteredFriends[index];
+                  int originalIndex = friends.indexOf(friendName);
+                  return buildFriendListItem(context, friendName, images[originalIndex]);
                 },
               ),
             ),
@@ -135,7 +162,7 @@ class _FriendPageState extends State<FriendPage> {
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: SizedBox(
-        height: 40, // 높이를 조절하려면 여기서 조절합니다.
+        height: 40,
         child: TextField(
           onChanged: filterFriends,
           decoration: InputDecoration(
@@ -161,21 +188,35 @@ class _FriendPageState extends State<FriendPage> {
   }
 
   Widget buildFriendListItem(BuildContext context, String friendName, String imageUrl) {
+    bool isFollowing = followState[friendName] ?? false;
+
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         backgroundImage: NetworkImage(imageUrl),
       ),
       title: Text(friendName),
-      trailing: TextButton(
-        onPressed: () {
-          // Add your logic for following/unfollowing here
-        },
-        child: Text(
-          '팔로잉',
-          style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
+      trailing: SizedBox(
+        height: 40,
+        child: TextButton(
+          onPressed: () {
+            toggleFriend(friendName);
+          },
+          child: Container(
+            width: 65,
+            decoration: BoxDecoration(
+              color: isFollowing ? Colors.grey.withOpacity(0.2) : Constants.primaryColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Center(
+              child: Text(
+                isFollowing ? '친구 추가' : '팔로잉',
+                style: TextStyle(
+                  color: isFollowing ? Constants.primaryColor : Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ),
       ),

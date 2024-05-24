@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:emodi/constants.dart';
+import 'package:emodi/root_page.dart';
+import 'package:emodi/communitys/emotion_analysis.dart';
 
 class HlogWritePage extends StatefulWidget {
   final List<File>? images;
@@ -14,14 +16,45 @@ class HlogWritePage extends StatefulWidget {
 
 class _HlogWritePageState extends State<HlogWritePage> {
   TextEditingController _textEditingController = TextEditingController();
-  int _currentImageIndex = 0;
+  File? _selectedImage;
+
+  // 키워드 리스트
+  final List<String> keywords = ['#키워드1', '#키워드2', '#키워드3', '#키워드4'];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.images != null && widget.images!.isNotEmpty) {
+      _selectedImage = widget.images!.first;
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RootPage()),
+            );
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         title: Text(
-          '풋살',
+          '일기 작성',
           style: TextStyle(
             fontWeight: FontWeight.w700,
           ),
@@ -29,16 +62,21 @@ class _HlogWritePageState extends State<HlogWritePage> {
         scrolledUnderElevation: 0,
         actions: [
           Row(
-            children: [ // 약간의 여백 추가
-              TextButton(
-                onPressed: null,
-                child: Text(
-                  'Done',
-                  style: TextStyle(
-                    color: Constants.primaryColor,
-                    fontSize: 15,
-                  ),
-                ),
+            children: [
+              IconButton(
+                onPressed: () {
+                  // Add calendar functionality here
+                },
+                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EmotionAnalysisPage()),
+                  );
+                },
+                icon: Icon(Icons.done, color: Colors.black),
               ),
               SizedBox(width: 10),
             ],
@@ -50,59 +88,47 @@ class _HlogWritePageState extends State<HlogWritePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.images != null && widget.images!.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CarouselSlider(
-                          options: CarouselOptions(
-                            height: 250.0,
-                            enlargeCenterPage: true,
-                            enableInfiniteScroll: false,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentImageIndex = index;
-                              });
-                            },
-                          ),
-                          items: widget.images!.map((image) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: Image.file(image),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: widget.images!.asMap().entries.map((entry) {
-                            return Container(
-                              width: 8.0,
-                              height: 8.0,
-                              margin: EdgeInsets.symmetric(horizontal: 4.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _currentImageIndex == entry.key
-                                    ? Constants.primaryColor
-                                    : Colors.grey,
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+            // Image selection container
+            GestureDetector(
+              onTap: _pickImage,
+              child: Container(
+                width: double.infinity,
+                height: _selectedImage != null ? null : 150.0,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: _selectedImage != null
+                    ? Image.file(
+                  _selectedImage!,
+                  fit: BoxFit.cover,
+                )
+                    : Center(
+                  child: Icon(Icons.add_a_photo, size: 50.0, color: Colors.grey),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            // 키워드 리스트
+            Wrap(
+              children: keywords.map((keyword) {
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
+                  padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Text(
+                    keyword,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
                   ),
-                ],
-              ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _textEditingController,
               maxLines: null,
@@ -113,7 +139,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
             ),
           ],
         ),
-    ),
+      ),
     );
   }
 }

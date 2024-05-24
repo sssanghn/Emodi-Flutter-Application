@@ -21,7 +21,7 @@ class _ExplanationPageState extends State<ExplanationPage> {
   int currentPage = 0; // 현재 페이지 인덱스를 추적하는 변수
 
   List<String> pageTexts = [
-    'What\'s your Hobby?',
+    'What\'s your Emotion?',
     '페이지 2 문구',
     '페이지 3 문구',
     '페이지 4 문구',
@@ -42,26 +42,29 @@ class _ExplanationPageState extends State<ExplanationPage> {
         child: Column(
           children: [
             const SizedBox(height: 80),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                'Hobby',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Emo',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -1.0,
+                    color: Constants.primaryColor,
+                    fontSize: 30,
+                  ),
                 ),
-              ),
-              Text(
-                'Hobby',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                  color: Constants.primaryColor,
+                Text(
+                  'Di',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -1.0,
+                    fontSize: 30,
+                  ),
                 ),
-              ),
-            ]),
-            SizedBox(height: 30),
+              ],
+            ),
+            SizedBox(height: 20),
             Column(
               children: [
                 Container(
@@ -73,10 +76,10 @@ class _ExplanationPageState extends State<ExplanationPage> {
                       });
                     },
                     children: [
-                      Image.asset('assets/explanation1.jpg'),
-                      Image.asset('assets/explanation1.jpg'),
-                      Image.asset('assets/explanation1.jpg'),
-                      Image.asset('assets/explanation1.jpg')
+                      Image.asset('assets/app_icon.png'),
+                      Image.asset('assets/app_icon.png'),
+                      Image.asset('assets/app_icon.png'),
+                      Image.asset('assets/app_icon.png')
                     ],
                   ),
                 ),

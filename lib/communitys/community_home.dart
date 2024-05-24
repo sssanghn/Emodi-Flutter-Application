@@ -1,8 +1,6 @@
+import 'package:emodi/communitys/hlog_write.dart';
 import 'package:flutter/material.dart';
 import 'package:emodi/communitys/hlog.dart';
-import 'package:emodi/communitys/hlog_write.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:emodi/constants.dart';
 
 class CommunityHomePage extends StatefulWidget {
@@ -13,24 +11,6 @@ class CommunityHomePage extends StatefulWidget {
 }
 
 class _CommunityHomePageState extends State<CommunityHomePage> {
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFiles = await picker.pickMultiImage();
-
-    if (pickedFiles != null && pickedFiles.isNotEmpty) {
-      List<File> images =
-          pickedFiles.map((pickedFile) => File(pickedFile.path)).toList();
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HlogWritePage(images: images),
-        ),
-      );
-    } else {
-      print('이미지가 선택되지 않았습니다.');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +60,27 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
           ),
         ],
       ),
+      floatingActionButton:
+      Align(
+    alignment: Alignment.bottomRight,
+    child: Padding(
+    padding: const EdgeInsets.only(bottom: 10.0, right: 10.0),
+    child: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HlogWritePage()),
+          );
+        },
+        child: Icon(Icons.edit),
+        backgroundColor: Colors.lightBlue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+      ),
+    ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -97,8 +98,13 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         ],
         countLikes: 12,
         writeTime: '10:33 AM. 28 Feb',
-        diaryTitle: '홍바겐 지름기',
+        diaryTitle: '제목',
         diaryDay: '2024-05-22',
+        likedProfile: [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnnnObTCNg1QJoEd9Krwl3kSUnPYTZrxb5Ig&usqp=CAU',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRisv-yQgXGrto6OxQxX62JyvyQGvRsQQ760g&usqp=CAU',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQifBWUhSiSfL0t8M3XCOe8aIyS6de2xWrt5A&usqp=CAU',
+        ],
       ),
     );
   }
