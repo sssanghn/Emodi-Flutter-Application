@@ -154,134 +154,134 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
         appBar: AppBar(
         title: Text(
-        '내 일기',
-        style: Constants.titleTextStyle,
-    ),
-    leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-    Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => RootPage()),
-    );
-    },
-    ),
-    ),
-    body: SingleChildScrollView(
-    child: Padding(
-    padding: EdgeInsets.all(8.0),
-    child: Column(
-    children: [
-    TableCalendar(
-    locale: 'ko_KR',
-    firstDay: DateTime.utc(2010, 10, 16),
-    lastDay: DateTime.utc(2030, 3, 14),
-    focusedDay: _focusedDay,
-    calendarFormat: CalendarFormat.month,
-    availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-    selectedDayPredicate: (day) {
-    return isSameDay(_selectedDay, day);
-    },
-    onDaySelected: (selectedDay, focusedDay) {
-    setState(() {
-    _selectedDay = selectedDay;
-    _focusedDay = focusedDay;
-    });
-    },
-    onFormatChanged: (_) {},
-    onPageChanged: (focusedDay) {
-    _focusedDay = focusedDay;
-    },
-    calendarBuilders: CalendarBuilders(
-    defaultBuilder: (context, day, focusedDay) {
-    return Center(
-    child: Text(
-    '${day.day}',
-    style: TextStyle(color: Colors.black),
-    ),
-    );
-    },
-    selectedBuilder: (context, day, focusedDay) {
-    return Center(
-    child: Container(
-    decoration: BoxDecoration(
-    color: Constants.primaryColor,
-    shape: BoxShape.circle,
-    ),
-    width: 40,
-    height: 40,
-    child: Center(
-    child: Text(
-    '${day.day}',
-    style: TextStyle(color: Colors.white),
-    ),
-    ),
-    ),
-    );
-    },
-    todayBuilder: (context, day, focusedDay) {
-    return Center(
-    child: Container(
-    decoration: BoxDecoration(
-    color: Constants.primaryColor.withOpacity(0.4),
-    shape: BoxShape.circle,
-    ),
-    width: 40,
-    height: 40,
-    child: Center(
-    child: Text(
-    '${day.day}',
-    style: TextStyle(color: Colors.white),
-    ),
-    ),
-    ),
-    );
-    },
-    outsideBuilder: (context, day, focusedDay) {
-    return Center(
-    child: Text(
-    '${day.day}',
-    style: TextStyle(color: Colors.grey),
-    ),
-    );
-    },
-    disabledBuilder: (context, day, focusedDay) {
-    return Center(
-    child: Text(
-    '${day.day}',
-    style: TextStyle(color: Colors.grey),
-    ),
-    );
-    },
-    ),
-    ),
-      ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: _listBlockData.length,
-        itemBuilder: (context, index) {
-          final blockData = _listBlockData[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListBlock(
-              color: blockData.color,
-              text: blockData.text,
-              selectedDay: blockData.selectedDay,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyDiaryPage(),
+          '내 일기',
+          style: Constants.titleTextStyle,
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RootPage()),
+            );
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TableCalendar(
+                locale: 'ko_KR',
+                firstDay: DateTime.utc(2010, 10, 16),
+                lastDay: DateTime.utc(2030, 3, 14),
+                focusedDay: _focusedDay,
+                calendarFormat: CalendarFormat.month,
+                availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                },
+                onFormatChanged: (_) {},
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) {
+                    return Center(
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  },
+                  selectedBuilder: (context, day, focusedDay) {
+                    return Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Constants.primaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        width: 40,
+                        height: 40,
+                        child: Center(
+                          child: Text(
+                            '${day.day}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  todayBuilder: (context, day, focusedDay) {
+                    return Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Constants.primaryColor.withOpacity(0.4),
+                          shape: BoxShape.circle,
+                        ),
+                        width: 40,
+                        height: 40,
+                        child: Center(
+                          child: Text(
+                            '${day.day}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  outsideBuilder: (context, day, focusedDay) {
+                    return Center(
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    );
+                  },
+                  disabledBuilder: (context, day, focusedDay) {
+                    return Center(
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ),
-          );
-        },
+              const SizedBox(height: 15),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _listBlockData.length,
+                itemBuilder: (context, index) {
+                  final blockData = _listBlockData[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: ListBlock(
+                      color: blockData.color,
+                      text: blockData.text,
+                      selectedDay: blockData.selectedDay,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyDiaryPage(),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
-    ],
-    ),
-    ),
-    ),
     );
   }
 }
-

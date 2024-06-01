@@ -40,7 +40,6 @@ class _MyPageState extends State<MyPage> {
       setState(() {
         _profileImageUrl = image.path;
       });
-      Navigator.pop(context);
     }
   }
 
