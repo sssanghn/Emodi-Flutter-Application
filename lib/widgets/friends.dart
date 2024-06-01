@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/constants.dart';
+import 'package:emodi/widgets/popup_page.dart';
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key});
@@ -217,6 +218,32 @@ class _FriendPageState extends State<FriendPage> {
           ),
         ),
       ),
+      onTap: () {
+        showGeneralDialog(
+          context: context,
+          barrierDismissible: true,
+          barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.grey.withOpacity(0.7),
+          transitionDuration: const Duration(milliseconds: 200),
+          pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.55,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+              child: PopUpPage(
+                  friendName: friendName,
+                  imageUrl: imageUrl,
+                  showEditProfileButton: false,
+                  isPopup: true,
+                ),
+              ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
