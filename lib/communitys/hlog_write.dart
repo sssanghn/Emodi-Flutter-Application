@@ -16,6 +16,7 @@ class HlogWritePage extends StatefulWidget {
 class _HlogWritePageState extends State<HlogWritePage> {
   TextEditingController _textEditingController = TextEditingController();
   File? _selectedImage;
+  DateTime? _selectedDate;
 
   // 키워드 리스트
   final List<String> keywords = ['#키워드1', '#키워드2', '#키워드3', '#키워드4'];
@@ -26,6 +27,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
     if (widget.images != null && widget.images!.isNotEmpty) {
       _selectedImage = widget.images!.first;
     }
+    _selectedDate = DateTime.now(); // Initialize with today's date
   }
 
   Future<void> _pickImage() async {
@@ -35,6 +37,21 @@ class _HlogWritePageState extends State<HlogWritePage> {
     if (image != null) {
       setState(() {
         _selectedImage = File(image.path);
+      });
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
       });
     }
   }
@@ -64,7 +81,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
             children: [
               IconButton(
                 onPressed: () {
-                  // Add calendar functionality here
+                  _selectDate(context);
                 },
                 icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
               ),
@@ -126,6 +143,15 @@ class _HlogWritePageState extends State<HlogWritePage> {
                   ),
                 );
               }).toList(),
+            ),
+            const SizedBox(height: 16.0),
+            // 선택한 날짜 표시
+            Text(
+              "${_selectedDate!.toLocal().toIso8601String().split('T')[0]}",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 16.0),
             TextField(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/widgets/announcements_page.dart';
+import 'package:emodi/Auth/explanation.dart'; // explanation.dart 페이지를 임포트합니다.
 
 int postsNum = 0;
 int likesNum = 0;
@@ -32,16 +33,16 @@ class _MyPageState extends State<MyPage> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            '마이페이지',
-            style: Constants.titleTextStyle,
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Icon(Icons.settings),
+            title: Text(
+              '마이페이지',
+              style: Constants.titleTextStyle,
             ),
-          ]
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Icon(Icons.settings),
+              ),
+            ]
         ),
         body: Align(
           alignment: Alignment.topCenter,
@@ -165,9 +166,9 @@ class _MyPageState extends State<MyPage> {
                         trailing: const Icon(Icons.navigate_next),
                         onTap: () {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProfilePage())
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfilePage())
                           );
                         },
                       ),
@@ -189,7 +190,14 @@ class _MyPageState extends State<MyPage> {
                         trailing: const Icon(Icons.navigate_next),
                         title: Text('로그아웃'),
                         onTap: () {
-                          // Handle Logout tap
+                          // 로그아웃 버튼을 눌렀을 때 처음 화면으로 이동하도록 설정합니다.
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ExplanationPage(),
+                            ),
+                                (route) => false,
+                          );
                         },
                       ),
                     ]).toList(),
