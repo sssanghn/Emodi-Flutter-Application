@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:emodi/constants.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/communitys/emotion_analysis.dart';
 
