@@ -42,7 +42,7 @@ class _PopUpPageState extends State<PopUpPage> {
       ),
       child: Scaffold(
         body: Padding(
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.only(left: 8, right: 8, bottom: 8, top: 12),
           child: Align(
             alignment: Alignment.topCenter,
             child: Column(

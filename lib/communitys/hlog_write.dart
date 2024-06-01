@@ -15,6 +15,7 @@ class HlogWritePage extends StatefulWidget {
 
 class _HlogWritePageState extends State<HlogWritePage> {
   TextEditingController _textEditingController = TextEditingController();
+  TextEditingController _titleEditingController = TextEditingController();
   File? _selectedImage;
   DateTime? _selectedDate;
 
@@ -75,16 +76,8 @@ class _HlogWritePageState extends State<HlogWritePage> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        scrolledUnderElevation: 0,
+        centerTitle: true,
         actions: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  _selectDate(context);
-                },
-                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-              ),
               IconButton(
                 onPressed: () {
                   Navigator.push(
@@ -94,11 +87,9 @@ class _HlogWritePageState extends State<HlogWritePage> {
                 },
                 icon: Icon(Icons.done, color: Colors.black),
               ),
-              SizedBox(width: 10),
+          SizedBox(width: 10),
             ],
           ),
-        ],
-      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -145,13 +136,31 @@ class _HlogWritePageState extends State<HlogWritePage> {
               }).toList(),
             ),
             const SizedBox(height: 16.0),
-            // 선택한 날짜 표시
-            Text(
-              "${_selectedDate!.toLocal().toIso8601String().split('T')[0]}",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _titleEditingController,
+                    decoration: InputDecoration(
+                      hintText: '제목을 입력하세요.',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _selectDate(context);
+                  },
+                  icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+                ),
+                Text(
+                  "${_selectedDate!.toLocal().toIso8601String().split('T')[0]}",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16.0),
             TextField(

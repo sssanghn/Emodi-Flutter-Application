@@ -53,19 +53,17 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
             // Image selection container
             Container(
               width: double.infinity,
-              height: _selectedImage != null ? 150.0 : 150.0,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+              height: _selectedImage != null ? 150.0 : 0,
               child: _selectedImage != null
                   ? Image.file(
                 _selectedImage!,
                 fit: BoxFit.cover,
               )
-                  : Container()
+                  : null
             ),
+            if(_selectedImage != null)
             const SizedBox(height: 16.0),
+            if(_selectedImage != null)
             Wrap(
               children: keywords.map((keyword) {
                 return Container(
@@ -85,14 +83,26 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
               }).toList(),
             ),
             const SizedBox(height: 16.0),
-            TextField(
-              controller: _textEditingController,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintText: '내용을 입력하세요.',
-                border: InputBorder.none,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '제목이다.'
+                  )
+                ),
+                Text(
+                  '날짜다.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
+            const SizedBox(height: 16.0),
+            Text(
+              '내용이다.'
+            )
           ],
         ),
       ),
