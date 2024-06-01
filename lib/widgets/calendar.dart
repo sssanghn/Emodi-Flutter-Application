@@ -128,6 +128,7 @@ class _CalendarPageState extends State<CalendarPage> {
           child: Column(
             children: [
               TableCalendar(
+                locale: 'ko_KR',
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
@@ -146,7 +147,69 @@ class _CalendarPageState extends State<CalendarPage> {
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
                 },
-              ),
+            calendarBuilders: CalendarBuilders(
+              defaultBuilder: (context, day, focusedDay) {
+                return Center(
+                  child: Text(
+                    '${day.day}', // '일'을 붙이지 않고 숫자만 표시
+                    style: TextStyle(color: Colors.black),
+                  ),
+                );
+              },
+              selectedBuilder: (context, day, focusedDay) {
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Constants.primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    width: 40,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        '${day.day}', // '일'을 붙이지 않고 숫자만 표시
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              todayBuilder: (context, day, focusedDay) {
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Constants.primaryColor.withOpacity(0.4),
+                      shape: BoxShape.circle,
+                    ),
+                    width: 40,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        '${day.day}', // '일'을 붙이지 않고 숫자만 표시
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              outsideBuilder: (context, day, focusedDay) {
+                return Center(
+                  child: Text(
+                    '${day.day}', // '일'을 붙이지 않고 숫자만 표시
+                    style: TextStyle(color: Colors.grey), // 다른 달의 날짜는 회색으로 표시
+                  ),
+                );
+              },
+              disabledBuilder: (context, day, focusedDay) {
+                return Center(
+                  child: Text(
+                    '${day.day}', // '일'을 붙이지 않고 숫자만 표시
+                    style: TextStyle(color: Colors.grey), // 비활성화된 날짜는 회색으로 표시
+                  ),
+                );
+              },
+            ),
+          ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),

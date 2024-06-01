@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/communitys/emotion_analysis.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:emodi/constants.dart';
 
 void main() {
   runApp(MyApp());
@@ -73,6 +74,18 @@ class _HlogWritePageState extends State<HlogWritePage> {
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: Constants.primaryColor,
+            colorScheme: ColorScheme.light(
+                primary: Constants.primaryColor,
+            ),
+            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null && picked != _selectedDate) {
