@@ -3,7 +3,7 @@ import 'package:emodi/widgets/mypage.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/communitys/community_home.dart';
 import 'package:emodi/widgets/friends.dart';
-import 'package:emodi/widgets/diary.dart';
+import 'package:emodi/widgets/calendar.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);
@@ -20,8 +20,8 @@ class _RootPageState extends State<RootPage> {
     return [
       const CommunityHomePage(),
       const FriendPage(),
-      const DiaryPage(),
-      const MyPage(),
+      const CalendarPage(),
+      MyPage(friendName: '이상헌', imageUrl: 'http://tigerday.org/wp-content/uploads/2013/04/Siberischer_tiger.jpg'),
     ];
   }
 

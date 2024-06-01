@@ -1,16 +1,22 @@
+import 'package:emodi/widgets/edit_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:emodi/constants.dart';
+import 'package:emodi/widgets/announcements_page.dart';
 
 int postsNum = 0;
 int likesNum = 0;
 int commentsNum = 0;
-String userName = 'ETRI';
-String userEmail = 'ETRI@hanyang.ac.kr';
-NetworkImage userImage = NetworkImage('https://via.placeholder.com/150');
 
 class MyPage extends StatefulWidget {
-  const MyPage({super.key});
+  final String friendName;
+  final String imageUrl;
+
+  MyPage({
+    Key? key,
+    required this.friendName,
+    required this.imageUrl,
+  }) : super(key: key);
 
   @override
   State<MyPage> createState() => _MyPageState();
@@ -21,21 +27,21 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-          // splashColor: Colors.transparent,
-          // highlightColor: Colors.transparent,
-          ),
+        // splashColor: Colors.transparent,
+        // highlightColor: Colors.transparent,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
             '마이페이지',
             style: Constants.titleTextStyle,
           ),
-          actions: const [
+          actions: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Icon(Icons.settings),
             ),
-          ],
+          ]
         ),
         body: Align(
           alignment: Alignment.topCenter,
@@ -45,11 +51,11 @@ class _MyPageState extends State<MyPage> {
               SizedBox(height: 16),
               CircleAvatar(
                 radius: 50,
-                backgroundImage: userImage,
+                backgroundImage: NetworkImage(widget.imageUrl),
               ),
               SizedBox(height: 7),
               Text(
-                userName,
+                widget.friendName,
                 style: TextStyle(
                   fontSize: 24,
                   // fontWeight: FontWeight.bold,
@@ -57,7 +63,7 @@ class _MyPageState extends State<MyPage> {
               ),
               SizedBox(height: 0),
               Text(
-                userEmail,
+                'ETRI@hanyang.ac.kr', // This can be changed to dynamically use a value if required
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -120,25 +126,25 @@ class _MyPageState extends State<MyPage> {
                         ),
                         const VerticalDivider(),
                         Container(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "팔로워",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Text(
+                                "팔로워",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                SizedBox(height: 3),
-                                Text(
-                                  likesNum.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Constants.primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                likesNum.toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Constants.primaryColor,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -158,7 +164,11 @@ class _MyPageState extends State<MyPage> {
                         title: Text('프로필 수정'),
                         trailing: const Icon(Icons.navigate_next),
                         onTap: () {
-                          // Handle Edit Profile tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfilePage())
+                          );
                         },
                       ),
                       ListTile(
@@ -166,7 +176,12 @@ class _MyPageState extends State<MyPage> {
                         trailing: const Icon(Icons.navigate_next),
                         title: Text('공지사항'),
                         onTap: () {
-                          // Handle Announcements tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AnnouncementsPage()
+                            ),
+                          );
                         },
                       ),
                       ListTile(

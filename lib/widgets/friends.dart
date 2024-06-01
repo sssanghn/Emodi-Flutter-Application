@@ -75,10 +75,7 @@ class _FriendPageState extends State<FriendPage> {
         ),
         title: Text(
           '친구 목록',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-          ),
+          style: Constants.titleTextStyle,
         ),
       ),
       body: Padding(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:emodi/root_page.dart';
+import 'package:emodi/constants.dart';
 
 class ListBlock extends StatelessWidget {
   final Color color;
@@ -173,7 +175,19 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendar Page'),
+        title: Text(
+            '내 일기',
+        style: Constants.titleTextStyle,
+      ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RootPage()),
+            );
+          },
+        ),
       ),
       body: Column(
         children: [
