@@ -63,7 +63,7 @@ class _PopUpPageState extends State<PopUpPage> {
                 ),
                 SizedBox(height: 0),
                 Text(
-                  'ETRI@hanyang.ac.kr', // This can be changed to dynamically use a value if required
+                  '${widget.friendName}@hanyang.ac.kr',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
