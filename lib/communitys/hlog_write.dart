@@ -139,7 +139,8 @@ class _HlogWritePageState extends State<HlogWritePage> {
               child: Container(
                 width: double.infinity,
                 height: _selectedImage != null ? null : 150.0,
-                decoration: BoxDecoration(
+                decoration: _selectedImage != null ? null :
+                BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8.0),
                 ),

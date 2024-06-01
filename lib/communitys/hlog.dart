@@ -198,27 +198,13 @@ class _HlogPageState extends State<HlogPage> {
                     child: Icon(Icons.bookmark_border)),
               ),
             ),
-            //안보이는 아이템2
-            Opacity(
-              opacity: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                    child: Icon(Icons.bookmark_border)),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(right: 20),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isBookmarked = !_isBookmarked; // Toggle the favorite state
-                  });
-                },
-                child: Icon(
-                  _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                  color: _isBookmarked ? Constants.primaryColor : Colors.black,
-                  size: 30,
+              child: Text(
+                '좋아요 ${widget.countLikes}개',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Constants.textColor,
                 ),
               ),
             ),
@@ -235,65 +221,7 @@ class _HlogPageState extends State<HlogPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Row(
-              children: [
-                SizedBox(
-            width: 80,
-                  child: Stack(
-                    children: [
-                      ClipOval(
-                        child: Image.network(
-                          widget.likedProfile[0],
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        left: 20, // 두 번째 이미지의 위치 조정
-                        child: ClipOval(
-                          child: Image.network(
-                            widget.likedProfile[2],
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 40, // 세 번째 이미지의 위치 조정
-                        child: ClipOval(
-                          child: Image.network(
-                            widget.likedProfile[1],
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                'Liked by 00',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-                Spacer(),
-                Text(
-                  '좋아요 ${widget.countLikes}개',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Constants.textColor,
-                  ),
-                ),
-            ],
-          ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
               Text(

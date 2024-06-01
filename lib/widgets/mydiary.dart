@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:emodi/widgets/calendar.dart';
+import 'package:emodi/constants.dart';
+import 'package:emodi/widgets/my_emotion_analysis.dart';
 
 class MyDiaryPage extends StatefulWidget {
   final List<File>? images;
@@ -44,6 +45,21 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyEmotionAnalysisPage())
+              );
+            },
+            icon: Icon(Icons.emoji_emotions_outlined,
+          size: 33,
+          color: Constants.primaryColor),
+          ),
+          const SizedBox(width: 10),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -87,22 +103,27 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
               children: [
                 Expanded(
                   child: Text(
-                    '제목이다.'
+                    '제목이다.',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   )
                 ),
                 Text(
                   '날짜다.',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
             Text(
-              '내용이다.'
-            )
+              '내용이다.',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
           ],
         ),
       ),

@@ -1,6 +1,6 @@
-import 'package:emodi/widgets/edit_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/widgets/announcements_page.dart';
 import 'package:emodi/Auth/explanation.dart'; // explanation.dart 페이지를 임포트합니다.
@@ -24,6 +24,26 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  String? _profileImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileImageUrl = widget.imageUrl;
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _profileImageUrl = image.path;
+      });
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -52,7 +72,9 @@ class _MyPageState extends State<MyPage> {
               SizedBox(height: 16),
               CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(widget.imageUrl),
+                backgroundImage: AssetImage(
+                    'assets/app_icon.png'
+                ),
               ),
               SizedBox(height: 7),
               Text(
@@ -165,11 +187,7 @@ class _MyPageState extends State<MyPage> {
                         title: Text('프로필 수정'),
                         trailing: const Icon(Icons.navigate_next),
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfilePage())
-                          );
+                          _pickImage();
                         },
                       ),
                       ListTile(
