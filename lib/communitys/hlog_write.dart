@@ -3,6 +3,30 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/communitys/emotion_analysis.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      locale: Locale('ko', 'KR'), // 로케일을 한국어로 설정
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // 영어
+        const Locale('ko', 'KR'), // 한국어
+      ],
+      home: HlogWritePage(),
+    );
+  }
+}
 
 class HlogWritePage extends StatefulWidget {
   final List<File>? images;
@@ -45,6 +69,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
+      locale: const Locale('ko', 'KR'), // 달력을 한국어로 설정
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
