@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/constants.dart';
-import 'package:emodi/widgets/popup_page.dart';
+import 'package:emodi/widgets/feature_friends/popup_page.dart';
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key});

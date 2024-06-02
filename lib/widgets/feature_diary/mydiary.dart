@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:emodi/constants.dart';
-import 'package:emodi/widgets/my_emotion_analysis.dart';
+import 'package:emodi/widgets/feature_diary/my_emotion_analysis.dart';
 
 class MyDiaryPage extends StatefulWidget {
   final List<File>? images;

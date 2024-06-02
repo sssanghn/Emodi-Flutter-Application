@@ -1,6 +1,6 @@
-import 'package:emodi/communitys/hlog_write.dart';
+import 'package:emodi/communitys/feed_write.dart';
 import 'package:flutter/material.dart';
-import 'package:emodi/communitys/hlog.dart';
+import 'package:emodi/communitys/feed.dart';
 import 'package:emodi/constants.dart';
 
 class CommunityHomePage extends StatefulWidget {

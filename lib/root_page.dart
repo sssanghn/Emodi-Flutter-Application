@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:emodi/widgets/mypage.dart';
 import 'package:emodi/constants.dart';
-import 'package:emodi/communitys/community_home.dart';
-import 'package:emodi/widgets/friends.dart';
-import 'package:emodi/widgets/calendar.dart';
+import 'package:emodi/communitys/feed_home.dart';
+import 'package:emodi/widgets/feature_friends/friends.dart';
+import 'package:emodi/widgets/feature_diary/calendar.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);

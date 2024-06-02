@@ -1,4 +1,4 @@
-import 'package:emodi/widgets/mydiary.dart';
+import 'package:emodi/widgets/feature_diary/mydiary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
