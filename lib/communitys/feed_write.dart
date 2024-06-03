@@ -3,36 +3,14 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/communitys/emotion_analysis.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:emodi/constants.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      locale: Locale('ko', 'KR'), // 로케일을 한국어로 설정
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', ''), // 영어
-        const Locale('ko', 'KR'), // 한국어
-      ],
-      home: HlogWritePage(),
-    );
-  }
-}
+import 'package:emodi/Auth/auth_manager.dart';
 
 class HlogWritePage extends StatefulWidget {
+  final AuthManager authManager;
   final List<File>? images;
 
-  const HlogWritePage({Key? key, this.images}) : super(key: key);
+  const HlogWritePage({Key? key, this.images, required this.authManager}) : super(key: key);
 
   @override
   State<HlogWritePage> createState() => _HlogWritePageState();
@@ -43,6 +21,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
   TextEditingController _titleEditingController = TextEditingController();
   File? _selectedImage;
   DateTime? _selectedDate;
+  late AuthManager _authManager;
 
   // 키워드 리스트
   final List<String> keywords = ['#키워드1', '#키워드2', '#키워드3', '#키워드4'];
@@ -50,6 +29,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
   @override
   void initState() {
     super.initState();
+    _authManager = widget.authManager;
     if (widget.images != null && widget.images!.isNotEmpty) {
       _selectedImage = widget.images!.first;
     }
@@ -103,7 +83,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootPage()),
+              MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
             );
           },
           icon: Icon(Icons.arrow_back),
@@ -120,7 +100,7 @@ class _HlogWritePageState extends State<HlogWritePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EmotionAnalysisPage()),
+                    MaterialPageRoute(builder: (context) => EmotionAnalysisPage(authManager: _authManager)),
                   );
                 },
                 icon: Icon(Icons.done, color: Colors.black),

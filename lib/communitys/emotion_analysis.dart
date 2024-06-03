@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:emodi/root_page.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:emodi/Auth/auth_manager.dart';
 
 class EmotionAnalysisPage extends StatefulWidget {
-  const EmotionAnalysisPage({Key? key}) : super(key: key);
+  final AuthManager authManager;
+  const EmotionAnalysisPage({Key? key, required this.authManager}) : super(key: key);
 
   @override
   State<EmotionAnalysisPage> createState() => _EmotionAnalysisPageState();
 }
 
 class _EmotionAnalysisPageState extends State<EmotionAnalysisPage> {
+  late AuthManager _authManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _authManager = widget.authManager;
+    _startAnimation();
+  }
+
   Map<String, double> dataMap = {
     '분노': 20,
     '행복': 20,
@@ -23,12 +34,6 @@ class _EmotionAnalysisPageState extends State<EmotionAnalysisPage> {
   List<bool> isSelected = [true, false];
   bool _showText = false;
   bool _showCorrectionText = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _startAnimation();
-  }
 
   void _startAnimation() {
     Future.delayed(Duration(milliseconds: 1200), () {
@@ -130,7 +135,7 @@ class _EmotionAnalysisPageState extends State<EmotionAnalysisPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RootPage()),
+                MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
               );
             },
             icon: Icon(Icons.done, color: Colors.black),

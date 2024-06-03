@@ -2,15 +2,24 @@ import 'package:emodi/communitys/feed_write.dart';
 import 'package:flutter/material.dart';
 import 'package:emodi/communitys/feed.dart';
 import 'package:emodi/constants.dart';
+import 'package:emodi/Auth/auth_manager.dart';
 
 class CommunityHomePage extends StatefulWidget {
-  const CommunityHomePage({super.key});
+  final AuthManager authManager;
+  const CommunityHomePage({super.key, required this.authManager});
 
   @override
   _CommunityHomePageState createState() => _CommunityHomePageState();
 }
 
 class _CommunityHomePageState extends State<CommunityHomePage> {
+  late AuthManager _authManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _authManager = widget.authManager;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HlogWritePage()),
+            MaterialPageRoute(builder: (context) => HlogWritePage(authManager: _authManager)),
           );
         },
         child: Icon(Icons.edit),

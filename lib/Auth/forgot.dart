@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:emodi/constants.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:emodi/Auth/login.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/Auth/user_model.dart';
+import 'package:emodi/Auth/auth_repository.dart';
 
 class ForgotPage extends StatefulWidget {
+  final AuthRepository authRepository;
+  final AuthManager authManager;
 
-  const ForgotPage({Key? key}) : super(key: key);
+  const ForgotPage({Key? key, required this.authRepository, required this.authManager}) : super(key: key);
 
   @override
   State<ForgotPage> createState() => _ForgotPageState();
@@ -14,10 +19,14 @@ class ForgotPage extends StatefulWidget {
 class _ForgotPageState extends State<ForgotPage> {
   var _emailInputText = TextEditingController();
   var _passInputText = TextEditingController();
+  late AuthRepository _authRepository;
+  late AuthManager _authManager;
 
   @override
   void initState() {
     super.initState();
+    _authRepository = widget.authRepository;
+    _authManager = widget.authManager;
   }
 
 
@@ -42,7 +51,7 @@ class _ForgotPageState extends State<ForgotPage> {
               Navigator.pushReplacement(
                 context,
                 PageTransition(
-                  child: LoginPage(),
+                  child: LoginPage(authRepository: _authRepository, authManager: _authManager),
                   type: PageTransitionType.leftToRightWithFade,
                   duration: Duration(milliseconds: 300),
                 ),

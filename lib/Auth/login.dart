@@ -4,10 +4,18 @@ import 'package:emodi/constants.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:emodi/Auth/explanation.dart';
 import 'package:emodi/root_page.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/Auth/user_model.dart';
+import 'package:emodi/Auth/auth_repository.dart';
+import 'package:emodi/Auth/jwt_token_model.dart';
 
 class LoginPage extends StatefulWidget {
+  final AuthRepository authRepository;
+  final AuthManager authManager;
 
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage(
+      {Key? key, required this.authRepository, required this.authManager})
+      : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   var _emailInputText = TextEditingController();
   var _passInputText = TextEditingController();
   bool _obscurePassword = true;
+  late AuthRepository _authRepository;
+  late AuthManager _authManager;
 
   void dispose() {
     _emailInputText.dispose();
@@ -28,6 +38,8 @@ class _LoginPageState extends State<LoginPage> {
   // 초기화
   void initState() {
     super.initState();
+    _authRepository = widget.authRepository;
+    _authManager = widget.authManager;
   }
 
   @override
@@ -45,7 +57,8 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushReplacement(
               context,
               PageTransition(
-                child: ExplanationPage(),
+                child: ExplanationPage(
+                    authManager: _authManager, authRepository: _authRepository),
                 type: PageTransitionType.leftToRight,
                 duration: Duration(milliseconds: 300),
               ),
@@ -78,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _emailInputText,
                 obscureText: false,
                 decoration: InputDecoration(
-                  hintText: ' Email',
+                  hintText: ' ID',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.grey.withOpacity(0.3), // 변경할 색상 설정
@@ -136,7 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.pushReplacement(
                       context,
                       PageTransition(
-                          child: ForgotPage(),
+                          child: ForgotPage(
+                              authManager: _authManager,
+                              authRepository: _authRepository),
                           type: PageTransitionType.rightToLeftWithFade,
                           duration: Duration(milliseconds: 300)));
                 },
@@ -173,54 +188,42 @@ class _LoginPageState extends State<LoginPage> {
                   setState(() {
                     _isLoading = true; // 버튼을 눌렀을 때 대기 상태로 설정
                   });
-                  // 여기에 토큰 호출 설정//디바이스 토큰 예시
-                  /*** User user = User.withDefaultUserLogin(
-                      userEmail: _emailInputText.text,
-                      userType: UserType.DEFAULT,
+                  User user = User.withDefaultUserLogin(
+                      loginId: _emailInputText.text,
                       password: _passInputText.text,
-                      deviceToken: '123');
-                      try {
-                      JwtToken jwtToken =
-                      await _authRepository.postDefaultLogin(user);
-                      await _authRepository.saveAllToken(jwtToken);
-                      jwtToken = await _authRepository.loadAccessToken();
-                      await _communityRepository.getCommunityPopularContents(jwtToken);
+                  );
+                  try {
+                    JwtToken jwtToken =
+                        await _authRepository.postDefaultLogin(user);
+                    await _authRepository.saveAllToken(jwtToken);
+                    jwtToken = await _authRepository.loadAccessToken();
 
-                      // 회원가입 요청 완료 후 페이지 전환
-                      Navigator.pushReplacement(
+                    // 로그인 요청 완료 후 페이지 전환
+                    Navigator.pushReplacement(
                       context,
                       PageTransition(
-                      child: RootPage(),
-                      type: PageTransitionType.rightToLeftWithFade,
-                      duration: Duration(milliseconds: 300),
+                        child: RootPage(authManager: _authManager),
+                        type: PageTransitionType.rightToLeftWithFade,
+                        duration: Duration(milliseconds: 300),
                       ),
-                      );
-                      } catch (error) {
-                      if (error.toString() == "USER_TYPE_IS_NOT_VALIDATE") {
+                    );
+                  } catch (error) {
+                    if (error.toString() == "USER_TYPE_IS_NOT_VALIDATE") {
                       // 에러 처리 해주세용!
                       print("회원가입한 유저와 다른 유저타입");
-                      } else if (error.toString() == "USER_LOGIN_PASSWORD_FAIL") {
+                    } else if (error.toString() == "USER_LOGIN_PASSWORD_FAIL") {
                       // 에러 처리 해주세용!
                       print("비밀번호가 틀림");
-                      } else if (error.toString() == "USER_EMAIL_NOT_FOUND") {
+                    } else if (error.toString() == "USER_EMAIL_NOT_FOUND") {
                       // 에러 처리 해주세용!
                       print("저장된 정보가 없습니다");
-                      }
-                      setState(() {
+                    }
+                    setState(() {
                       _isLoading = false; // 에러 발생 시 대기 상태 해제
                       _loginFailed = true; // 로그인 실패 상태로 설정
-                      });
-                      print('Error during registration: $error');
-                      }
-                      }, ***/
-                  Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                      child: RootPage(),
-                      type: PageTransitionType.rightToLeftWithFade,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  );
+                    });
+                    print('Error during registration: $error');
+                  }
                 },
                 child: Container(
                   width: size.width,

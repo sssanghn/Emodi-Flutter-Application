@@ -5,12 +5,18 @@ import 'package:emodi/Auth/login.dart';
 import 'package:emodi/Auth/create.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/Auth/user_model.dart';
+import 'package:emodi/Auth/auth_repository.dart';
+
 
 class CreateDetailPage extends StatefulWidget {
   final String password;
-  final String email;
+  final String id;
+  final AuthRepository authRepository;
+  final AuthManager authManager;
 
-  const CreateDetailPage({Key? key, required this.password, required this.email}) : super(key: key);
+  const CreateDetailPage({Key? key, required this.authRepository, required this.authManager, required this.password, required this.id}) : super(key: key);
 
   @override
   State<CreateDetailPage> createState() => _CreateDetailPageState();
@@ -18,51 +24,28 @@ class CreateDetailPage extends StatefulWidget {
 
 class _CreateDetailPageState extends State<CreateDetailPage> {
   late String _password;
-  late String _email;
+  late String _id;
   var _nicknameInputText = TextEditingController();
-  var _nameInputText = TextEditingController();
-  var _birthInputText = TextEditingController();
+  var _emailInputText = TextEditingController();
   var _phoneInputText = TextEditingController();
-  var _phoneAuthText = TextEditingController();
-  DateTime? _selectedDate;
+  late AuthRepository _authRepository;
+  late AuthManager _authManager;
+
 
   @override
   void initState() {
     super.initState();
+    _authRepository = widget.authRepository;
+    _authManager = widget.authManager;
     _password = widget.password;
-    _email = widget.email;
+    _id = widget.id;
   }
 
   void dispose() {
     _nicknameInputText.dispose();
-    _nameInputText.dispose();
+    _emailInputText.dispose();
     _phoneInputText.dispose();
-    _birthInputText.dispose();
-    _phoneAuthText.dispose();
     super.dispose();
-  }
-
-  void _showDatePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return Container(
-          height: MediaQuery.of(context).copyWith().size.height / 3,
-          child: CupertinoDatePicker(
-            dateOrder: DatePickerDateOrder.ymd,
-            mode: CupertinoDatePickerMode.date,
-            initialDateTime: DateTime.now(),
-            onDateTimeChanged: (DateTime newDateTime) {
-              setState(() {
-                _selectedDate = newDateTime;
-                _birthInputText.text =
-                    "${_selectedDate!.year}.${_selectedDate!.month}.${_selectedDate!.day}";
-              });
-            },
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -80,7 +63,7 @@ class _CreateDetailPageState extends State<CreateDetailPage> {
             Navigator.pushReplacement(
               context,
               PageTransition(
-                child: CreatePage(),
+                child: CreatePage(authManager: _authManager, authRepository: _authRepository),
                 type: PageTransitionType.leftToRightWithFade,
                 duration: Duration(milliseconds: 300),
               ),
@@ -128,35 +111,14 @@ class _CreateDetailPageState extends State<CreateDetailPage> {
                     ),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  suffixIcon: InkWell(
-                    onTap: () {
-                      // 중복 확인 기능 추가
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Constants.primaryColor,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          '중복 확인',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(height: 10),
               TextField(
-                controller: _nameInputText,
+                controller: _emailInputText,
                 obscureText: false,
                 decoration: InputDecoration(
-                  hintText: ' 이름',
+                  hintText: ' 이메일',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.grey.withOpacity(0.3), // 변경할 색상 설정
@@ -168,32 +130,6 @@ class _CreateDetailPageState extends State<CreateDetailPage> {
                     borderSide: BorderSide(
                       color: Constants.primaryColor, // 변경할 색상 설정
                       width: 2.0, // 테두리 두께 설정
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                onTap: () {
-                  _showDatePicker(context);
-                },
-                readOnly: true,
-                controller: _birthInputText,
-                obscureText: false,
-                decoration: InputDecoration(
-                  hintText: ' 생년월일',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.withOpacity(0.3),
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Constants.primaryColor,
-                      width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -238,57 +174,13 @@ class _CreateDetailPageState extends State<CreateDetailPage> {
                     ),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  suffixIcon: InkWell(
-                    onTap: () {
-                      // 중복 확인 기능 추가
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Constants.primaryColor,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          '  인증  ',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _phoneAuthText,
-                obscureText: false,
-                decoration: InputDecoration(
-                  hintText: ' 인증번호',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.withOpacity(0.3), // 변경할 색상 설정
-                      width: 2.0, // 테두리 두께 설정
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Constants.primaryColor, // 변경할 색상 설정
-                      width: 2.0, // 테두리 두께 설정
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
                 ),
               ),
               const SizedBox(height: 30),
               InkWell(
                 onTap: () async {
                   if (_nicknameInputText.text.isEmpty ||
-                      _nameInputText.text.isEmpty ||
-                      _birthInputText.text.isEmpty ||
+                      _emailInputText.text.isEmpty ||
                       _phoneInputText.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -304,14 +196,34 @@ class _CreateDetailPageState extends State<CreateDetailPage> {
                   setState(() {
                     _isLoading = true; // 버튼을 눌렀을 때 대기 상태로 설정
                   });
-                  Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                      child: LoginPage(),
-                      type: PageTransitionType.rightToLeftWithFade,
-                      duration: Duration(milliseconds: 300),
-                    ),
+                  User user = User.withUserRegister(
+                    loginId: _id,
+                    password: _password,
+                    email: _emailInputText.text,
+                    username: _nicknameInputText.text,
+                    tellNumber: _phoneInputText.text,
                   );
+                  try {
+                    await _authRepository.postDefaultRegister(user);
+                    // 회원가입 요청 완료 후 페이지 전환
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        child: LoginPage(authRepository: _authRepository, authManager: _authManager),
+                        type: PageTransitionType.rightToLeftWithFade,
+                        duration: Duration(milliseconds: 300),
+                      ),
+                    );
+                  } catch (error) {
+                    if (error.toString() == 'USER_EMAIL_DUPLICATED') {
+                      // 에러 처리 해주세용!
+                    }
+                    setState(() {
+                      _isLoading = false; // 에러 발생 시 대기 상태 해제
+                      _loginFailed = true; // 로그인 실패 상태로 설정
+                    });
+                    print('Error during registration: $error');
+                  }
                 },
                 child: Container(
                   width: size.width,

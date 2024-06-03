@@ -4,10 +4,14 @@ import 'package:page_transition/page_transition.dart';
 import 'package:emodi/Auth/explanation.dart';
 import 'package:emodi/Auth/login.dart';
 import 'package:emodi/Auth/create_detail.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/Auth/auth_repository.dart';
 
 class CreatePage extends StatefulWidget {
+  final AuthRepository authRepository;
+  final AuthManager authManager;
 
-  const CreatePage({Key? key}) : super(key: key);
+  const CreatePage({Key? key, required this.authManager, required this.authRepository}) : super(key: key);
 
   @override
   State<CreatePage> createState() => _CreatePageState();
@@ -18,10 +22,14 @@ class _CreatePageState extends State<CreatePage> {
   var _passInputText = TextEditingController();
   var _confirmPassInputText = TextEditingController(); // 추가
   bool _obscurePassword = true;
+  late AuthRepository _authRepository;
+  late AuthManager _authManager;
 
   @override
   void initState() {
     super.initState();
+    _authRepository = widget.authRepository;
+    _authManager = widget.authManager;
     _confirmPassInputText.addListener(_confirmPasswordTextChanged);
   }
 
@@ -52,7 +60,7 @@ class _CreatePageState extends State<CreatePage> {
             Navigator.pushReplacement(
               context,
               PageTransition(
-                child: ExplanationPage(),
+                child: ExplanationPage(authRepository: _authRepository, authManager: _authManager),
                 type: PageTransitionType.leftToRightWithFade,
                 duration: Duration(milliseconds: 300),
               ),
@@ -85,7 +93,7 @@ class _CreatePageState extends State<CreatePage> {
                 controller: _emailInputText,
                 obscureText: false,
                 decoration: InputDecoration(
-                  hintText: ' Email',
+                  hintText: ' ID',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.grey.withOpacity(0.3),
@@ -143,8 +151,6 @@ class _CreatePageState extends State<CreatePage> {
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
                   hintText: ' Confirm Password',
-                  filled: true, // 수정된 부분
-                  fillColor: _passInputText.text != _confirmPassInputText.text ? Colors.red.withOpacity(0.1) : Colors.white, // 수정된 부분
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: _passInputText.text != _confirmPassInputText.text ? Colors.red : Colors.grey.withOpacity(0.3),
@@ -177,7 +183,7 @@ class _CreatePageState extends State<CreatePage> {
                   Navigator.pushReplacement(
                     context,
                     PageTransition(
-                      child: LoginPage(),
+                      child: LoginPage(authManager: _authManager, authRepository: _authRepository),
                       type: PageTransitionType.rightToLeftWithFade,
                       duration: Duration(milliseconds: 300),
                     ),
@@ -227,7 +233,7 @@ class _CreatePageState extends State<CreatePage> {
                   Navigator.pushReplacement(
                     context,
                     PageTransition(
-                      child: CreateDetailPage(password: _passInputText.text, email: _emailInputText.text),
+                      child: CreateDetailPage(password: _passInputText.text, id: _emailInputText.text, authRepository: _authRepository, authManager: _authManager),
                       type: PageTransitionType.rightToLeftWithFade,
                       duration: Duration(milliseconds: 300),
                     ),

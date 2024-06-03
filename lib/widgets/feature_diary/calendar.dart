@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/constants.dart';
+import 'package:emodi/Auth/auth_manager.dart';
 
 // 모델 클래스 정의
 class ListBlockData {
@@ -125,15 +126,23 @@ class ListBlock extends StatelessWidget {
 }
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key});
+  final AuthManager authManager;
+  const CalendarPage({Key? key, required this.authManager});
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  late AuthManager _authManager;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _authManager = widget.authManager;
+    }
 
   // 서버에서 데이터를 받는다고 가정하고 미리 데이터를 정의
   final List<ListBlockData> _listBlockData = [
@@ -162,7 +171,7 @@ class _CalendarPageState extends State<CalendarPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootPage()),
+              MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
             );
           },
         ),

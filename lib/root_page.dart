@@ -4,9 +4,12 @@ import 'package:emodi/constants.dart';
 import 'package:emodi/communitys/feed_home.dart';
 import 'package:emodi/widgets/feature_friends/friends.dart';
 import 'package:emodi/widgets/feature_diary/calendar.dart';
+import 'package:emodi/Auth/auth_manager.dart';
 
 class RootPage extends StatefulWidget {
-  const RootPage({Key? key}) : super(key: key);
+  final AuthManager authManager;
+  final int initialIndex;
+  const RootPage({Key? key, required this.authManager, this.initialIndex = 0}) : super(key: key);
 
   @override
   State<RootPage> createState() => _RootPageState();
@@ -14,14 +17,23 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int _bottomNavIndex = 0;
+  late AuthManager _authManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _bottomNavIndex = widget.initialIndex;
+    _authManager = widget.authManager;
+  }
 
   // 페이지 리스트
   List<Widget> _widgetOptions() {
     return [
-      const CommunityHomePage(),
-      const FriendPage(),
-      const CalendarPage(),
-      MyPage(friendName: '이상헌', imageUrl: 'http://tigerday.org/wp-content/uploads/2013/04/Siberischer_tiger.jpg'),
+      CommunityHomePage(authManager: _authManager),
+      FriendPage(authManager: _authManager),
+      CalendarPage(authManager: _authManager),
+      MyPage(friendName: '이상헌', imageUrl: 'http://tigerday.org/wp-content/uploads/2013/04/Siberischer_tiger.jpg',
+      authManager: _authManager),
     ];
   }
 

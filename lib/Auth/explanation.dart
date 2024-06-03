@@ -9,9 +9,15 @@ import 'package:emodi/Auth/login.dart';
 import 'package:http/http.dart' as http;
 import '../root_page.dart';
 import 'package:emodi/Auth/create.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/Auth/user_model.dart';
+import 'package:emodi/Auth/auth_repository.dart';
 
 class ExplanationPage extends StatefulWidget {
-  const ExplanationPage({Key? key}) : super(key: key);
+  final AuthRepository authRepository;
+  final AuthManager authManager;
+
+  const ExplanationPage({Key? key, required this.authManager, required this.authRepository}) : super(key: key);
 
   @override
   State<ExplanationPage> createState() => _ExplanationPageState();
@@ -19,6 +25,8 @@ class ExplanationPage extends StatefulWidget {
 
 class _ExplanationPageState extends State<ExplanationPage> {
   int currentPage = 0; // 현재 페이지 인덱스를 추적하는 변수
+  late AuthRepository _authRepository;
+  late AuthManager _authManager;
 
   List<String> pageTexts = [
     'What\'s your Emotion?',
@@ -32,6 +40,8 @@ class _ExplanationPageState extends State<ExplanationPage> {
   // 초기화
   void initState() {
     super.initState();
+    _authRepository = widget.authRepository;
+    _authManager = widget.authManager;
   }
 
   @override
@@ -116,7 +126,7 @@ class _ExplanationPageState extends State<ExplanationPage> {
               onTap: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CreatePage()),
+                  MaterialPageRoute(builder: (context) => CreatePage(authRepository: _authRepository, authManager: _authManager)),
                 );
               },
               child: Container(
@@ -154,7 +164,7 @@ class _ExplanationPageState extends State<ExplanationPage> {
                     Navigator.pushReplacement(
                         context,
                         PageTransition(
-                            child: LoginPage(),
+                            child: LoginPage(authManager: _authManager, authRepository: _authRepository),
                             type: PageTransitionType.bottomToTop,
                             duration: Duration(milliseconds: 300)));
                   },

@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/widgets/announcements_page.dart';
-import 'package:emodi/Auth/explanation.dart'; // explanation.dart 페이지를 임포트합니다.
+import 'package:emodi/Auth/explanation.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/Auth/auth_repository.dart';
+import 'package:emodi/Auth/auth_remote_api.dart';
+import 'package:emodi/DataSource/local_data_storage.dart';
+import 'package:page_transition/page_transition.dart';
 
 int postsNum = 0;
 int likesNum = 0;
@@ -12,11 +17,13 @@ int commentsNum = 0;
 class MyPage extends StatefulWidget {
   final String friendName;
   final String imageUrl;
+  final AuthManager authManager;
 
   MyPage({
     Key? key,
     required this.friendName,
     required this.imageUrl,
+    required this.authManager,
   }) : super(key: key);
 
   @override
@@ -24,11 +31,15 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  late AuthManager _authManager;
+  late AuthRepository _authRepository;
   String? _profileImageUrl;
 
   @override
   void initState() {
     super.initState();
+    _authRepository = AuthRepository(LocalDataStorage(), AuthRemoteApi());
+    _authManager = widget.authManager;
     _profileImageUrl = widget.imageUrl;
   }
 
@@ -207,13 +218,16 @@ class _MyPageState extends State<MyPage> {
                         trailing: const Icon(Icons.navigate_next),
                         title: Text('로그아웃'),
                         onTap: () {
-                          // 로그아웃 버튼을 눌렀을 때 처음 화면으로 이동하도록 설정합니다.
-                          Navigator.pushAndRemoveUntil(
+                          _authManager.removeToken();
+                          Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => ExplanationPage(),
+                            PageTransition(
+                              child: ExplanationPage(
+                                  authRepository: _authRepository,
+                                  authManager: _authManager),
+                              type: PageTransitionType.rightToLeftWithFade,
+                              duration: Duration(milliseconds: 300),
                             ),
-                                (route) => false,
                           );
                         },
                       ),

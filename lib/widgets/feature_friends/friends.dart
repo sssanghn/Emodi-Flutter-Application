@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/widgets/feature_friends/popup_page.dart';
+import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/widgets/feature_friends/friends_model.dart';
 
 class FriendPage extends StatefulWidget {
-  const FriendPage({super.key});
+  final AuthManager authManager;
+
+  const FriendPage({Key? key, required this.authManager})
+      : super(key: key);
 
   @override
   State<FriendPage> createState() => _FriendPageState();
 }
 
 class _FriendPageState extends State<FriendPage> {
+  late AuthManager _authManager;
   bool isToggleSelected = true;
 
   List<String> friends = [
@@ -33,6 +39,7 @@ class _FriendPageState extends State<FriendPage> {
   @override
   void initState() {
     super.initState();
+    _authManager = widget.authManager;
     filteredFriends = friends;
     for (var friend in friends) {
       followState[friend] = true;
@@ -70,7 +77,7 @@ class _FriendPageState extends State<FriendPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootPage()),
+              MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
             );
           },
         ),
