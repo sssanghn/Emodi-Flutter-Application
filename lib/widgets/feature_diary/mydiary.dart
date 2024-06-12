@@ -66,20 +66,18 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image selection container
             Container(
               width: double.infinity,
-              height: _selectedImage != null ? 150.0 : 0,
-              child: _selectedImage != null
-                  ? Image.file(
-                _selectedImage!,
-                fit: BoxFit.cover,
-              )
-                  : null
+              height: 150.0,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Center(
+                child: Icon(Icons.add_a_photo, size: 50.0, color: Colors.grey),
+              ),
             ),
-            if(_selectedImage != null)
             const SizedBox(height: 16.0),
-            if(_selectedImage != null)
             Wrap(
               children: keywords.map((keyword) {
                 return Container(
@@ -103,14 +101,14 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
               children: [
                 Expanded(
                   child: Text(
-                    '제목이다.',
+                    '제목입니다.',
                     style: TextStyle(
                       fontSize: 16,
                     ),
                   )
                 ),
                 Text(
-                  '날짜다.',
+                  '날짜입니다.',
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -119,7 +117,7 @@ class _MyDiaryPageState extends State<MyDiaryPage> {
             ),
             const SizedBox(height: 16.0),
             Text(
-              '내용이다.',
+              '내용입니다.',
               style: TextStyle(
                 fontSize: 16,
               ),

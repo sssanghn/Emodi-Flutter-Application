@@ -1,10 +1,10 @@
-import 'package:emodi/widgets/feature_diary/mydiary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:emodi/root_page.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/widgets/feature_diary/mydiary.dart';
 
 // 모델 클래스 정의
 class ListBlockData {
@@ -100,20 +100,6 @@ class ListBlock extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10), // 이미지 컨테이너와 화살표 사이 간격
-            Container(
-              width: 60, // 이미지 컨테이너 너비
-              height: 60, // 이미지 컨테이너 높이
-              decoration: BoxDecoration(
-                color: Colors.grey, // 임시로 회색 배경 사용
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.image,
-                  color: Colors.white70,
-                ), // 이미지가 들어갈 위치 표시
-              ),
-            ),
             Icon(
               Icons.arrow_forward_ios,
               color: Colors.white70,
@@ -127,7 +113,8 @@ class ListBlock extends StatelessWidget {
 
 class CalendarPage extends StatefulWidget {
   final AuthManager authManager;
-  const CalendarPage({Key? key, required this.authManager});
+  final int id;
+  const CalendarPage({Key? key, required this.id, required this.authManager});
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -142,26 +129,32 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     _authManager = widget.authManager;
-    }
+    _selectedDay = _focusedDay;
+  }
 
-  // 서버에서 데이터를 받는다고 가정하고 미리 데이터를 정의
-  final List<ListBlockData> _listBlockData = [
-    ListBlockData(
-      color: Constants.primaryColor,
-      text: '일기 제목 1',
-      selectedDay: DateTime.now(),
-    ),
-    ListBlockData(
-      color: Constants.primaryColor,
-      text: '일기 제목 2',
-      selectedDay: DateTime.now(),
-    ),
-  ];
+  List<ListBlockData> _listBlockData = [];
+
+  void _updateListBlockData(DateTime selectedDay) {
+    setState(() {
+      _listBlockData = [
+        ListBlockData(
+          color: Constants.primaryColor,
+          text: '일기 제목 1',
+          selectedDay: selectedDay,
+        ),
+        ListBlockData(
+          color: Constants.primaryColor,
+          text: '일기 제목 2',
+          selectedDay: selectedDay,
+        ),
+      ];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text(
           '내 일기',
           style: Constants.titleTextStyle,
@@ -171,7 +164,7 @@ class _CalendarPageState extends State<CalendarPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
+              MaterialPageRoute(builder: (context) => RootPage(id: widget.id, authManager: _authManager)),
             );
           },
         ),
@@ -195,6 +188,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
+                    _updateListBlockData(selectedDay);
                   });
                 },
                 onFormatChanged: (_) {},

@@ -1,3 +1,4 @@
+import 'package:emodi/Auth/auth_remote_api.dart';
 import 'package:flutter/material.dart';
 import 'package:emodi/Auth/forgot.dart';
 import 'package:emodi/constants.dart';
@@ -193,16 +194,14 @@ class _LoginPageState extends State<LoginPage> {
                       password: _passInputText.text,
                   );
                   try {
-                    JwtToken jwtToken =
-                        await _authRepository.postDefaultLogin(user);
-                    await _authRepository.saveAllToken(jwtToken);
-                    jwtToken = await _authRepository.loadAccessToken();
-
+                    LoginResponse loginResponse =
+                    await _authRepository.postDefaultLogin(user);
+                    await _authRepository.saveAllToken(loginResponse.jwtToken);
                     // 로그인 요청 완료 후 페이지 전환
                     Navigator.pushReplacement(
                       context,
                       PageTransition(
-                        child: RootPage(authManager: _authManager),
+                        child: RootPage(authManager: _authManager, id: loginResponse.id),
                         type: PageTransitionType.rightToLeftWithFade,
                         duration: Duration(milliseconds: 300),
                       ),

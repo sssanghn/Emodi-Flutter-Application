@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "iron-entropy-425406-m3",
+  "private_key_id": "a93187a3e1057b6459d94f673340e3cdd0e89aa0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCpwxUJzKn1S9VX\n3rZ44PrX/RI4U8g41g1OualmdI8OGKOG4LAqm8UdoDnsISdiiyKZgpm54SUWcG66\n1NXIIfQeEnLfTz2AiPudUVwGwhUwIKaJH5m7S9rYpN7ah18HGZXGTzwf9XYt3eDc\nmWHTmsQAOhMTk9qZ7oQKnVLJ2keuSq6+ck+NbtkqDxJTTGx+Zh2C5IK3wpjdYH7x\nS9KoGplHe5q0kejs2Zb+n8YvRMt22HzCrY4dFoONIK+I1RUdRuGcnsNw6yq/4I7G\n0C0Y8jPeqR+lfjQsChgJfAXJ3cZ3BMc8qjbPGuVtrHLn0fDpHHXIni9aHkScwvh6\nW+xSXJx9AgMBAAECggEABpMr7Cx9U6cLfQL+8bkS9g0S6NQT3+Goc8lcjn+Kr9rT\n8IwgvpG4ZXCYdbUGA7rMTQJCJnEaIN+bZkiKfB0WiZig0tXMlb8YcaweQpO/QtUs\n5ggvidHDCNt/1xphm5KJ2rukYj99Q4MBq8GUCKBIoZKePQafs5EJk6iqtW8rEgy5\nyEukzNf5WXRRp3MPaloALLiFF6tot7EBA8F388LSM/Y1yxpuCPrPLbIzDdwXavGI\n0IA6beSh8onqbbZyicrlSkUF+q0Zol4nrucl6II2GsiZhPh7HNlDDeiFCsxY4F29\ncx72lxFb6pRCvVVBFUOiXwRChsKy7USmXtRvKAlrIQKBgQDSG1ASbD7c5/izFaTK\nTS4QLhk1AZ6f3HwrgC8Qr1oJMEf9hRL35ivfx05Z10FJF9pdSVtObP5JtMmP5LTP\nAiHY04SLDk4zqAKaQ/qh0nuNpD+BI8Zpj+4+YrXOvsIUOW6kKJ/Bg+SY6/SXozTc\nTGUmPe8Cq1uGQUmWIYxSLj+o4QKBgQDO18nacUPvgcloRAMswNj95ysWBPXEMdxc\n2IR+RggMfonLswqJ6LbtmkVe7ILDPmU/kWv5bcZljJxQkagT2ufOTA8Gd1TLx0dF\nEI4bIb1QORSxO9lrN2P/dKQUd8R2b6ZxqOoWSJHacZ0Y6Eec3jNgUbZOSoljNhLf\n1xQI727bHQKBgGLsCR8jZ9WKQkXPAu9ctztW+PdD8/NAVBYHHCG27aU13i824F9n\nN3D83Z7fAhXv7RfO2fZqyq7ZN61P+PEeB+GWdOkjqx4XFGKdbvuRpipiEqQyu9An\nu/wTbZYRqj7ra3ROzCjIeHCnZ1mdtd2i+lyu/EE9fLIROxw8X1yx+bcBAoGAcmc3\n5fIvuRD37QtxFhez7PsnAY7MwC8zysaWwaDKYt66KEhm09A7HT/ujooR6RthtL8i\nEVt+GDylWIq3hAPXomq/BLyL0gnuiWyWrLsEkpJ/t2d64apJTMme1xNHPpqSXNso\nXhrVURT15wjSUxkzIVsQkkz3oEAQQG4dTrPfhKECgYA9xLRqgS37Y4cCxLKnmcCj\nGpGZsNA2cJPM9sb3kS9B0D4LMdDNP8UMAWY6M2OiJdFVydRDucP4unuruUPC1gu6\nGS8D8ID3oOD8vn63wEMlJG+otNN1GFwbz5jhAoePb9qN6tUICI98AgD0YeOkb01i\nEeYltEufjunWI2lwGnCHyQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "emodi-524@iron-entropy-425406-m3.iam.gserviceaccount.com",
+  "client_id": "110487987206004374466",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/emodi-524%40iron-entropy-425406-m3.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -19,7 +19,7 @@ class ImageAvatar extends StatelessWidget {
     return switch (type) {
       AvatarType.BASIC => ClipOval(
           child: Image.asset(
-            'assets/icon.png',
+            'assets/app_icon.png',
             width: width,
             height: width,
           ), // 기본 아바타 이미지

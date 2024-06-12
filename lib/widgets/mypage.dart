@@ -9,21 +9,18 @@ import 'package:emodi/Auth/auth_repository.dart';
 import 'package:emodi/Auth/auth_remote_api.dart';
 import 'package:emodi/DataSource/local_data_storage.dart';
 import 'package:page_transition/page_transition.dart';
-
-int postsNum = 0;
-int likesNum = 0;
-int commentsNum = 0;
+import 'package:emodi/widgets/mypage_model.dart';
+import 'package:emodi/widgets/mypage_remote_api.dart';
+import 'package:emodi/Auth/jwt_token_model.dart';
 
 class MyPage extends StatefulWidget {
-  final String friendName;
-  final String imageUrl;
   final AuthManager authManager;
+  final int id;
 
   MyPage({
     Key? key,
-    required this.friendName,
-    required this.imageUrl,
     required this.authManager,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -34,13 +31,18 @@ class _MyPageState extends State<MyPage> {
   late AuthManager _authManager;
   late AuthRepository _authRepository;
   String? _profileImageUrl;
+  late Future<JwtToken> jwtTokenFuture;
+  late myPageRemoteApi api;
+  UserInfo? myInfo;
 
   @override
   void initState() {
     super.initState();
     _authRepository = AuthRepository(LocalDataStorage(), AuthRemoteApi());
     _authManager = widget.authManager;
-    _profileImageUrl = widget.imageUrl;
+    jwtTokenFuture = _authManager.loadAccessToken();
+    api = myPageRemoteApi();
+    loadMyInfo();
   }
 
   Future<void> _pickImage() async {
@@ -51,6 +53,18 @@ class _MyPageState extends State<MyPage> {
       setState(() {
         _profileImageUrl = image.path;
       });
+    }
+  }
+
+  void loadMyInfo() async {
+    try {
+      JwtToken jwtToken = await jwtTokenFuture;
+      UserInfo userInfo = await api.myInfoGet(jwtToken, widget.id);
+      setState(() {
+        myInfo = userInfo;
+      });
+    } catch (e) {
+      print('Failed to load my Info: $e');
     }
   }
 
@@ -76,7 +90,9 @@ class _MyPageState extends State<MyPage> {
         ),
         body: Align(
           alignment: Alignment.topCenter,
-          child: Column(
+          child: myInfo == null
+              ? Center(child: CircularProgressIndicator()) // Show a centered loading indicator while data is being fetched
+              : Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 16),
@@ -88,7 +104,7 @@ class _MyPageState extends State<MyPage> {
               ),
               SizedBox(height: 7),
               Text(
-                widget.friendName,
+                '${myInfo!.username}',
                 style: TextStyle(
                   fontSize: 24,
                   // fontWeight: FontWeight.bold,
@@ -96,7 +112,7 @@ class _MyPageState extends State<MyPage> {
               ),
               SizedBox(height: 0),
               Text(
-                'ETRI@hanyang.ac.kr', // This can be changed to dynamically use a value if required
+                '${myInfo!.email}', // This can be changed to dynamically use a value if required
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -126,7 +142,7 @@ class _MyPageState extends State<MyPage> {
                               ),
                               SizedBox(height: 3),
                               Text(
-                                postsNum.toString(),
+                                '${myInfo!.postNum}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Constants.primaryColor,
@@ -148,7 +164,7 @@ class _MyPageState extends State<MyPage> {
                               ),
                               SizedBox(height: 3),
                               Text(
-                                likesNum.toString(),
+                                '${myInfo!.followingNum}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Constants.primaryColor,
@@ -170,7 +186,7 @@ class _MyPageState extends State<MyPage> {
                               ),
                               SizedBox(height: 3),
                               Text(
-                                likesNum.toString(),
+                                '${myInfo!.followerNum}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Constants.primaryColor,

@@ -9,9 +9,8 @@ class AuthRemoteApi {
   AuthRemoteApi() {
     httpClient = http.Client();
   }
-
   // 로그인 POST
-  Future<JwtToken> postDefaultLogin(User user) async {
+  Future<LoginResponse> postDefaultLogin(User user) async {
     var uri = Uri.https('emo-di.com', 'api/login');
     String jsonData = jsonEncode(user.toDefaultLoginJson());
     final http.Response response = await httpClient.post(
@@ -23,7 +22,7 @@ class AuthRemoteApi {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      return JwtToken.fromJson(data);
+      return LoginResponse.fromJson(data);
     } else {
       //로그인 실패 -> 로그인 정보 없음 or 비밀번호 오류
       Map<String, dynamic> data = jsonDecode(response.body);
@@ -71,5 +70,19 @@ class AuthRemoteApi {
     } else {
       throw Exception();
     }
+  }
+}
+
+class LoginResponse {
+  final int id;
+  final JwtToken jwtToken;
+
+  LoginResponse({required this.id, required this.jwtToken});
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
+      id: json['data']['memberDto']['id'],
+      jwtToken: JwtToken.fromJson(json),
+    );
   }
 }

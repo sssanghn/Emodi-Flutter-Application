@@ -35,7 +35,7 @@ class AuthRepository {
   }
 
   //일반 로그인 실패시 Exeption
-  Future<JwtToken> postDefaultLogin(User user) async {
+  Future<LoginResponse> postDefaultLogin(User user) async {
     return await _authRemoteApi.postDefaultLogin(user);
   }
 

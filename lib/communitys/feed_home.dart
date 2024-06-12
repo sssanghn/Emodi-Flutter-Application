@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:emodi/communitys/feed.dart';
 import 'package:emodi/constants.dart';
 import 'package:emodi/Auth/auth_manager.dart';
+import 'package:emodi/communitys/feed_model.dart';
+import 'package:emodi/communitys/feed_remote_api.dart';
+import 'package:emodi/Auth/jwt_token_model.dart';
 
 class CommunityHomePage extends StatefulWidget {
   final AuthManager authManager;
-  const CommunityHomePage({super.key, required this.authManager});
+  final int id;
+  const CommunityHomePage({super.key, required this.id, required this.authManager});
 
   @override
   _CommunityHomePageState createState() => _CommunityHomePageState();
@@ -14,11 +18,29 @@ class CommunityHomePage extends StatefulWidget {
 
 class _CommunityHomePageState extends State<CommunityHomePage> {
   late AuthManager _authManager;
+  late Future<JwtToken> jwtTokenFuture;
+  late FeedRemoteApi api;
+  List<Post>? loadPosts;
 
   @override
   void initState() {
     super.initState();
     _authManager = widget.authManager;
+    jwtTokenFuture = _authManager.loadAccessToken();
+    api = FeedRemoteApi();
+    loadFeeds();
+  }
+
+  void loadFeeds() async {
+    try {
+      JwtToken jwtToken = await jwtTokenFuture;
+      List<Post> posts = await api.LoadPostsGet(jwtToken, widget.id);
+      setState(() {
+        loadPosts = posts;
+      });
+    } catch (e) {
+      print('Failed to load my Info: $e');
+    }
   }
 
   @override
@@ -78,7 +100,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HlogWritePage(authManager: _authManager)),
+            MaterialPageRoute(builder: (context) => HlogWritePage(id: widget.id, authManager: _authManager)),
           );
         },
         child: Icon(Icons.edit),
@@ -94,27 +116,26 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
   }
 
   Widget _body() {
+    if (loadPosts == null) {
+      return Center(child: CircularProgressIndicator(
+        color: Constants.primaryColor,
+      ));
+    } else {
     return ListView.builder(
-      itemCount: 50,
-      itemBuilder: (context, index) => const HlogPage(
-        userUrl:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnnnObTCNg1QJoEd9Krwl3kSUnPYTZrxb5Ig&usqp=CAU',
-        userName: '_ugsxng99',
-        images: [
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnnnObTCNg1QJoEd9Krwl3kSUnPYTZrxb5Ig&usqp=CAU',
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRisv-yQgXGrto6OxQxX62JyvyQGvRsQQ760g&usqp=CAU',
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQifBWUhSiSfL0t8M3XCOe8aIyS6de2xWrt5A&usqp=CAU',
-        ],
-        countLikes: 12,
-        writeTime: '10:33 AM. 28 Feb',
-        diaryTitle: '제목',
-        diaryDay: '2024-05-22',
-        likedProfile: [
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnnnObTCNg1QJoEd9Krwl3kSUnPYTZrxb5Ig&usqp=CAU',
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRisv-yQgXGrto6OxQxX62JyvyQGvRsQQ760g&usqp=CAU',
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQifBWUhSiSfL0t8M3XCOe8aIyS6de2xWrt5A&usqp=CAU',
-        ],
-      ),
+      itemCount: loadPosts!.length,
+      itemBuilder: (context, index) {
+        final post = loadPosts![index];
+        return HlogPage(
+          keywords: post.keywords,
+          userUrl: post.imageUrl,
+          userName: post.memberLoginId,
+          images: [post.imageUrl],
+          likeCount: post.likeCount,
+          writeTime: post.createdAt.toLocal().toString(),
+          diaryTitle: post.title,
+          diaryDay: '2024-06-05',
+        );
+      }
     );
   }
-}
+}}

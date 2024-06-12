@@ -9,7 +9,8 @@ import 'package:emodi/Auth/auth_manager.dart';
 class RootPage extends StatefulWidget {
   final AuthManager authManager;
   final int initialIndex;
-  const RootPage({Key? key, required this.authManager, this.initialIndex = 0}) : super(key: key);
+  final int id;
+  const RootPage({Key? key, required this.id, required this.authManager, this.initialIndex = 0}) : super(key: key);
 
   @override
   State<RootPage> createState() => _RootPageState();
@@ -29,11 +30,10 @@ class _RootPageState extends State<RootPage> {
   // 페이지 리스트
   List<Widget> _widgetOptions() {
     return [
-      CommunityHomePage(authManager: _authManager),
-      FriendPage(authManager: _authManager),
-      CalendarPage(authManager: _authManager),
-      MyPage(friendName: '이상헌', imageUrl: 'http://tigerday.org/wp-content/uploads/2013/04/Siberischer_tiger.jpg',
-      authManager: _authManager),
+      CommunityHomePage(authManager: _authManager, id: widget.id),
+      FriendPage(authManager: _authManager, id: widget.id),
+      CalendarPage(authManager: _authManager, id: widget.id),
+      MyPage(authManager: _authManager, id: widget.id),
     ];
   }
 

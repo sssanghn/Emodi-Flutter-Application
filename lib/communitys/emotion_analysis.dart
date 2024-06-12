@@ -5,7 +5,10 @@ import 'package:emodi/Auth/auth_manager.dart';
 
 class EmotionAnalysisPage extends StatefulWidget {
   final AuthManager authManager;
-  const EmotionAnalysisPage({Key? key, required this.authManager}) : super(key: key);
+  final int id;
+  final Map<String, double> analysisResult;
+  final String highestEmotion;
+  const EmotionAnalysisPage({Key? key, required this.highestEmotion, required this.id, required this.authManager, required this.analysisResult}) : super(key: key);
 
   @override
   State<EmotionAnalysisPage> createState() => _EmotionAnalysisPageState();
@@ -13,23 +16,15 @@ class EmotionAnalysisPage extends StatefulWidget {
 
 class _EmotionAnalysisPageState extends State<EmotionAnalysisPage> {
   late AuthManager _authManager;
+  late Map<String, double> dataMap;
 
   @override
   void initState() {
     super.initState();
+    dataMap = widget.analysisResult;
     _authManager = widget.authManager;
     _startAnimation();
   }
-
-  Map<String, double> dataMap = {
-    '분노': 20,
-    '행복': 20,
-    '공포': 10,
-    '슬픔': 10,
-    '혐오': 10,
-    '놀람': 10,
-    '중립': 30,
-  };
 
   List<bool> isSelected = [true, false];
   bool _showText = false;
@@ -135,7 +130,7 @@ class _EmotionAnalysisPageState extends State<EmotionAnalysisPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
+                MaterialPageRoute(builder: (context) => RootPage(id: widget.id, authManager: _authManager)),
               );
             },
             icon: Icon(Icons.done, color: Colors.black),
@@ -187,7 +182,7 @@ class _EmotionAnalysisPageState extends State<EmotionAnalysisPage> {
                     ),
                   ),
                   Text(
-                    '"--" 감정으로 분석됩니다.',
+                    '"${widget.highestEmotion}" 감정으로 분석됩니다.',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

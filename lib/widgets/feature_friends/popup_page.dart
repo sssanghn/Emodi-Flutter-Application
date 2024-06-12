@@ -1,36 +1,40 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:emodi/constants.dart';
+import 'package:emodi/widgets/feature_friends/friends_model.dart';
 
-int postsNum = 0;
-int likesNum = 0;
-int commentsNum = 0;
-
-class PopUpPage extends StatefulWidget {
-  final String friendName;
-  final String imageUrl;
-  final bool showEditProfileButton;
+class PopUpPage extends StatelessWidget {
+  final UserInfo friend;
   final bool isPopup;
 
   const PopUpPage({
     Key? key,
-    required this.friendName,
-    required this.imageUrl,
-    this.showEditProfileButton = true,
+    required this.friend,
     this.isPopup = false,
   }) : super(key: key);
 
-  @override
-  State<PopUpPage> createState() => _PopUpPageState();
-}
-
-class _PopUpPageState extends State<PopUpPage> {
-  bool showEditProfileButton = false;
-
-  @override
-  void initState() {
-    super.initState();
-    showEditProfileButton = widget.showEditProfileButton;
+  Widget _buildInfoColumn(String label, String value) {
+    return Padding(
+    padding: EdgeInsets.all(12.0),
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 3),
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Constants.primaryColor,
+          ),
+        ),
+      ],
+        ),
+    );
   }
 
   @override
@@ -42,7 +46,7 @@ class _PopUpPageState extends State<PopUpPage> {
       ),
       child: Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(left: 8, right: 8, bottom: 8, top: 12),
+          padding: EdgeInsets.all(8),
           child: Align(
             alignment: Alignment.topCenter,
             child: Column(
@@ -51,27 +55,24 @@ class _PopUpPageState extends State<PopUpPage> {
                 SizedBox(height: 16),
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(widget.imageUrl),
+                  backgroundImage: NetworkImage(friend.imageUrl),
                 ),
                 SizedBox(height: 7),
                 Text(
-                  widget.friendName,
+                  friend.username,
                   style: TextStyle(
                     fontSize: 24,
-                    // fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 0),
                 Text(
-                  '${widget.friendName}@hanyang.ac.kr',
+                  friend.email,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
                   ),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 20,
                   child: Card(
@@ -80,72 +81,11 @@ class _PopUpPageState extends State<PopUpPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "게시물",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 3),
-                                Text(
-                                  postsNum.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Constants.primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          _buildInfoColumn("게시물", '${friend.postNum}'),
                           const VerticalDivider(),
-                          Container(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "팔로잉",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 3),
-                                Text(
-                                  likesNum.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Constants.primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          _buildInfoColumn("팔로잉", '${friend.followingNum}'),
                           const VerticalDivider(),
-                          Container(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "팔로워",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 3),
-                                Text(
-                                  likesNum.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Constants.primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          _buildInfoColumn("팔로워", '${friend.followerNum}'),
                         ],
                       ),
                     ),
@@ -154,22 +94,20 @@ class _PopUpPageState extends State<PopUpPage> {
                 SizedBox(height: 30),
                 TextButton(
                   onPressed: () {
-                    setState(() {
-                      showEditProfileButton = !showEditProfileButton;
-                    });
+
                   },
                   child: Container(
                     width: 120,
                     padding: EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      color: showEditProfileButton ? Constants.primaryColor : Colors.grey.withOpacity(0.2),
+                      color: friend.friend ? Constants.primaryColor : Colors.grey.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
                       child: Text(
-                        showEditProfileButton ? '팔로잉' : '친구 추가',
+                        friend.friend ? '팔로잉' : '친구 추가',
                         style: TextStyle(
-                          color: showEditProfileButton ? Colors.white : Constants.primaryColor,
+                          color: friend.friend ? Colors.white : Constants.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -10,21 +10,22 @@ class HlogPage extends StatefulWidget {
   final String userUrl;
   final String userName;
   final List<String> images;
-  final int countLikes;
+  final int likeCount; // 초기 좋아요 개수를 final로 정의
   final String writeTime;
   final String diaryTitle;
   final String diaryDay;
-  final List<String> likedProfile;
+  final List<String> keywords;
+
   const HlogPage({
     super.key,
     required this.userUrl,
     required this.userName,
     required this.images,
-    required this.countLikes,
+    required this.likeCount,
     required this.writeTime,
     required this.diaryTitle,
     required this.diaryDay,
-    required this.likedProfile,
+    required this.keywords,
   });
 
   @override
@@ -34,7 +35,13 @@ class HlogPage extends StatefulWidget {
 class _HlogPageState extends State<HlogPage> {
   int _current = 0;
   bool _isFavorited = false;
-  bool _isBookmarked = false;
+  late int likeCount; // likeCount를 상태 변수로 정의
+
+  @override
+  void initState() {
+    super.initState();
+    likeCount = widget.likeCount; // 초기 좋아요 개수 설정
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,18 +120,18 @@ class _HlogPageState extends State<HlogPage> {
           return Container(
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-          child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-            child: Container(
-            width: screenWidth,
-            height: screenWidth,
-            child: CachedNetworkImage(
-              //인덱스에 해당하는 이미지 로드
-              imageUrl: widget.images[index],
-              fit: BoxFit.cover,
-            ),
-          ),
-            ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Container(
+                  width: screenWidth,
+                  height: screenWidth,
+                  child: CachedNetworkImage(
+                    //인덱스에 해당하는 이미지 로드
+                    imageUrl: widget.images[index],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -153,6 +160,11 @@ class _HlogPageState extends State<HlogPage> {
               child: GestureDetector(
                 onTap: () {
                   setState(() {
+                    if (_isFavorited) {
+                      likeCount--;
+                    } else {
+                      likeCount++;
+                    }
                     _isFavorited = !_isFavorited; // Toggle the favorite state
                   });
                 },
@@ -164,13 +176,12 @@ class _HlogPageState extends State<HlogPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left:8),
+              padding: const EdgeInsets.only(left: 8),
               child: GestureDetector(child: Icon(Icons.mode_comment_outlined)),
             ),
             Padding(
-              padding: const EdgeInsets.only(left:8, right: 20),
-              child:
-              GestureDetector(child: Icon(Icons.share_outlined)),
+              padding: const EdgeInsets.only(left: 8, right: 20),
+              child: GestureDetector(child: Icon(Icons.share_outlined)),
             ),
           ],
         ),
@@ -201,7 +212,7 @@ class _HlogPageState extends State<HlogPage> {
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: Text(
-                '좋아요 ${widget.countLikes}개',
+                '좋아요 $likeCount개',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Constants.textColor,
@@ -223,23 +234,23 @@ class _HlogPageState extends State<HlogPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-              children: [
-              Text(
-                '${widget.diaryTitle}',
-              ),
-              Spacer(),
-              Text('${widget.diaryDay}',
-              style: TextStyle(
-                fontSize: 13,
-              ),
+                children: [
+                  Text(
+                    '${widget.diaryTitle}',
+                  ),
+                  Spacer(),
+                  Text('${widget.diaryDay}',
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),
+                  ),
+                ]
             ),
-            ]
-          ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ExpandableText(
-              '#키워드1 #키워드2 #키워드3 #키워드4',
+              '${widget.keywords.join(' ')}',
               expandText: '더보기',
               linkColor: Colors.grey,
             ),

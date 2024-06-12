@@ -4,12 +4,13 @@ import 'package:emodi/constants.dart';
 import 'package:emodi/widgets/feature_friends/popup_page.dart';
 import 'package:emodi/Auth/auth_manager.dart';
 import 'package:emodi/widgets/feature_friends/friends_model.dart';
+import 'package:emodi/widgets/feature_friends/friends_remote_api.dart';
+import 'package:emodi/Auth/jwt_token_model.dart';
 
 class FriendPage extends StatefulWidget {
   final AuthManager authManager;
-
-  const FriendPage({Key? key, required this.authManager})
-      : super(key: key);
+  final int id;
+  const FriendPage({Key? key, required this.id, required this.authManager}) : super(key: key);
 
   @override
   State<FriendPage> createState() => _FriendPageState();
@@ -17,55 +18,78 @@ class FriendPage extends StatefulWidget {
 
 class _FriendPageState extends State<FriendPage> {
   late AuthManager _authManager;
+  late FriendsRemoteApi api;
   bool isToggleSelected = true;
+  late Future<JwtToken> jwtTokenFuture;
 
-  List<String> friends = [
-    'Friend 1',
-    'Friend 2',
-    'Friend 3',
-  ];
-
-  List<String> images = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnnnObTCNg1QJoEd9Krwl3kSUnPYTZrxb5Ig&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRisv-yQgXGrto6OxQxX62JyvyQGvRsQQ760g&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQifBWUhSiSfL0t8M3XCOe8aIyS6de2xWrt5A&usqp=CAU',
-  ];
-
-  List<String> filteredFriends = [];
-  List<String> addedFriends = [];
-
-  Map<String, bool> followState = {};
+  List<UserSearch> allFriends = []; // 서버에서 불러온 모든 친구 리스트
+  List<UserSearch> filteredFriends = []; // 검색 또는 필터링된 친구 리스트
+  List<UserSearch> myFriends = []; // 내 친구 리스트
 
   @override
   void initState() {
     super.initState();
     _authManager = widget.authManager;
-    filteredFriends = friends;
-    for (var friend in friends) {
-      followState[friend] = true;
+    jwtTokenFuture = _authManager.loadAccessToken();
+    api = FriendsRemoteApi();
+    loadMyFriends(); // 처음 시작할 때 내 친구를 불러옴
+  }
+
+  void filterFriends(String query) async {
+    if (query.length < 3) {
+      setState(() {
+        filteredFriends = [];
+      });
+      return;
+    }
+    try {
+      JwtToken jwtToken = await jwtTokenFuture;
+      List<UserSearch> searchedFriends = await api.friendSearchGet(jwtToken, query);
+      setState(() {
+        filteredFriends = searchedFriends;
+      });
+    } catch (e) {
+      // Handle error
+      print(e);
     }
   }
 
-  void filterFriends(String query) {
-    setState(() {
-      if (isToggleSelected) {
-        filteredFriends = friends.where((friend) => friend.toLowerCase().contains(query.toLowerCase())).toList();
+  void toggleFriend(UserSearch friend) async {
+    try {
+      JwtToken jwtToken = await jwtTokenFuture;
+      if (friend.friend) {
+        await api.followingDelete(jwtToken, widget.id, friend.id);
       } else {
-        filteredFriends = addedFriends.where((friend) => friend.toLowerCase().contains(query.toLowerCase())).toList();
+        await api.followingPost(jwtToken, widget.id, friend.id);
       }
-    });
+      setState(() {
+        friend.friend = !friend.friend;
+        if (friend.friend) {
+          myFriends.add(friend); // 친구 추가 시 myFriends 리스트에 추가
+        } else {
+          myFriends.removeWhere((f) => f.id == friend.id); // 친구 삭제 시 myFriends 리스트에서 제거
+        }
+        if (!isToggleSelected) {
+          filteredFriends = myFriends;
+        }
+      });
+    } catch (e) {
+      print('Failed to follow/unfollow user: $e');
+    }
   }
 
-  void toggleFriend(String friendName) {
-    setState(() {
-      followState[friendName] = !(followState[friendName] ?? false);
-      if (!followState[friendName]!) {
-        addedFriends.add(friendName);
-      } else {
-        addedFriends.remove(friendName);
-      }
-      filterFriends('');  // Update the filteredFriends list based on the current toggle state
-    });
+  void searchMyFriends(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredFriends = myFriends;
+      });
+    } else {
+      setState(() {
+        filteredFriends = myFriends.where((friend) {
+          return friend.loginId.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
+    }
   }
 
   @override
@@ -77,7 +101,7 @@ class _FriendPageState extends State<FriendPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootPage(authManager: _authManager)),
+              MaterialPageRoute(builder: (context) => RootPage(id: widget.id, authManager: _authManager)),
             );
           },
         ),
@@ -97,13 +121,13 @@ class _FriendPageState extends State<FriendPage> {
                     onTap: () {
                       setState(() {
                         isToggleSelected = true;
-                        filterFriends('');  // Update the filteredFriends list based on the toggle state
+                        filteredFriends = [];
                       });
                     },
                     child: Column(
                       children: [
                         Text(
-                          ' 검색 ',
+                          '검색',
                           style: TextStyle(
                             color: isToggleSelected ? Colors.black : Colors.grey,
                             fontSize: 18,
@@ -123,7 +147,7 @@ class _FriendPageState extends State<FriendPage> {
                     onTap: () {
                       setState(() {
                         isToggleSelected = false;
-                        filterFriends('');  // Update the filteredFriends list based on the toggle state
+                        filteredFriends = myFriends;
                       });
                     },
                     child: Column(
@@ -151,9 +175,8 @@ class _FriendPageState extends State<FriendPage> {
               child: ListView.builder(
                 itemCount: filteredFriends.length,
                 itemBuilder: (context, index) {
-                  String friendName = filteredFriends[index];
-                  int originalIndex = friends.indexOf(friendName);
-                  return buildFriendListItem(context, friendName, images[originalIndex]);
+                  UserSearch friend = filteredFriends[index];
+                  return buildFriendListItem(context, friend, index);
                 },
               ),
             ),
@@ -169,7 +192,13 @@ class _FriendPageState extends State<FriendPage> {
       child: SizedBox(
         height: 40,
         child: TextField(
-          onChanged: filterFriends,
+          onChanged: (query) {
+            if (isToggleSelected) {
+              filterFriends(query);
+            } else {
+              searchMyFriends(query);
+            }
+          },
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 16),
             filled: true,
@@ -192,32 +221,32 @@ class _FriendPageState extends State<FriendPage> {
     );
   }
 
-  Widget buildFriendListItem(BuildContext context, String friendName, String imageUrl) {
-    bool isFollowing = followState[friendName] ?? false;
+  Widget buildFriendListItem(BuildContext context, UserSearch friend, int index) {
+    bool isFriend = friend.friend;
 
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
-        backgroundImage: NetworkImage(imageUrl),
+        backgroundImage: NetworkImage(friend.imageUrl.isEmpty ? 'https://placekitten.com/200/200' : friend.imageUrl),
       ),
-      title: Text(friendName),
+      title: Text(friend.loginId),
       trailing: SizedBox(
         height: 40,
         child: TextButton(
           onPressed: () {
-            toggleFriend(friendName);
+            toggleFriend(friend);
           },
           child: Container(
             width: 65,
             decoration: BoxDecoration(
-              color: isFollowing ? Colors.grey.withOpacity(0.2) : Constants.primaryColor,
+              color: isFriend ? Constants.primaryColor : Colors.grey.withOpacity(0.2),
               borderRadius: BorderRadius.circular(15),
             ),
             child: Center(
               child: Text(
-                isFollowing ? '친구 추가' : '팔로잉',
+                isFriend ? '팔로잉' : '친구 추가',
                 style: TextStyle(
-                  color: isFollowing ? Constants.primaryColor : Colors.white,
+                  color: isFriend ? Colors.white : Constants.primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -226,31 +255,63 @@ class _FriendPageState extends State<FriendPage> {
         ),
       ),
       onTap: () {
-        showGeneralDialog(
-          context: context,
-          barrierDismissible: true,
-          barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-          barrierColor: Colors.grey.withOpacity(0.7),
-          transitionDuration: const Duration(milliseconds: 200),
-          pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
-            return Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-              child: PopUpPage(
-                  friendName: friendName,
-                  imageUrl: imageUrl,
-                  showEditProfileButton: false,
-                  isPopup: true,
-                ),
-              ),
-              ),
+        // 친구 정보 로드
+        jwtTokenFuture.then((jwtToken) {
+          api.friendInfoGet(jwtToken, friend.id).then((userInfo) {
+            // PopUpPage에 friendInfo 전달
+            showGeneralDialog(
+              context: context,
+              barrierDismissible: true,
+              barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+              barrierColor: Colors.grey.withOpacity(0.7),
+              transitionDuration: const Duration(milliseconds: 200),
+              pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
+                return Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.55,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: PopUpPage(
+                        friend: userInfo,
+                        isPopup: true,
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
-          },
-        );
+          }).catchError((error) {
+            // 에러 처리
+            print('Error loading friend info: $error');
+          });
+        });
       },
     );
+  }
+
+  void loadMyFriends() async {
+    try {
+      JwtToken jwtToken = await jwtTokenFuture;
+      List<UserInfo> myFriendsList = await api.myFriendGet(jwtToken, widget.id);
+      setState(() {
+        myFriends = myFriendsList.map((userInfo) {
+          return UserSearch(
+            id: userInfo.id,
+            loginId: userInfo.loginId,
+            username: userInfo.username,
+            email: userInfo.email,
+            tellNumber: userInfo.tellNumber,
+            imageUrl: userInfo.imageUrl,
+            friend: true,
+          );
+        }).toList();
+        if (!isToggleSelected) {
+          filteredFriends = myFriends;
+        }
+      });
+    } catch (e) {
+      print('Failed to load my friends: $e');
+    }
   }
 }

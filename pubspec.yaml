@@ -56,6 +56,9 @@ dependencies:
   korea_regexp: ^1.2.1
   pie_chart: ^5.4.0
   table_calendar: ^3.0.9
+  google_vision: ^1.2.1+1
+  gcloud: ^0.8.12
+  googleapis_auth: ^1.6.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
